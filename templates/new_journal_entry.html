@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Journal Entry{% endblock %}
+
+{% block content %}
+<h1>Add Journal Entry</h1>
+<form method="POST" action="/profile/journal/new" enctype="multipart/form-data">
+    <label for="date">Date:</label>
+    <input type="date" id="date" name="date" required>
+
+    <label for="day_of_week">Day of the Week:</label>
+    <input type="text" id="day_of_week" name="day_of_week" required>
+
+    <label for="breakfast">Breakfast:</label>
+    <textarea id="breakfast" name="breakfast"></textarea>
+
+    <label for="second_breakfast">Second Breakfast:</label>
+    <textarea id="second_breakfast" name="second_breakfast"></textarea>
+
+    <label for="lunch">Lunch:</label>
+    <textarea id="lunch" name="lunch"></textarea>
+
+    <label for="dinner">Dinner:</label>
+    <textarea id="dinner" name="dinner"></textarea>
+
+    <label for="snack">Snack:</label>
+    <textarea id="snack" name="snack"></textarea>
+
+    <h3>Workout</h3>
+    <div id="exercise-container">
+        <div class="exercise-group">
+            <label for="workout_type_0">Workout Type:</label>
+            <input type="text" id="workout_type_0" name="workout_type[]" required>
+
+            <label for="workout_reps_0">Reps:</label>
+            <input type="text" id="workout_reps_0" name="workout_reps[]" required>
+
+            <label for="workout_notes_0">Notes:</label>
+            <textarea id="workout_notes_0" name="workout_notes[]"></textarea>
+        </div>
+    </div>
+
+    <button type="button" id="add-exercise" class="btn-add">Add Exercise</button>
+
+    <label for="conclusions">Conclusions:</label>
+    <textarea id="conclusions" name="conclusions"></textarea>
+
+    <button type="submit" class="btn-submit">Submit</button>
+</form>
+
+<script>
+    let exerciseCount = 1;
+    document.getElementById('add-exercise').addEventListener('click', function () {
+        const container = document.getElementById('exercise-container');
+        const newExercise = document.createElement('div');
+        newExercise.classList.add('exercise-group');
+        newExercise.innerHTML = `
+            <label for="workout_type_${exerciseCount}">Workout Type:</label>
+            <input type="text" id="workout_type_${exerciseCount}" name="workout_type[]" required>
+
+            <label for="workout_reps_${exerciseCount}">Reps:</label>
+            <input type="text" id="workout_reps_${exerciseCount}" name="workout_reps[]" required>
+
+            <label for="workout_notes_${exerciseCount}">Notes:</label>
+            <textarea id="workout_notes_${exerciseCount}" name="workout_notes[]"></textarea>
+        `;
+        container.appendChild(newExercise);
+        exerciseCount++;
+    });
+</script>
+{% endblock %}

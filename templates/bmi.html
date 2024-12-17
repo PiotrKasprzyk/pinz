@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Kalkulator BMI</h1>
+<p>Oblicz swoje BMI (Body Mass Index) i sprawdź kategorię swojej masy ciała.</p>
+
+<div style="display: flex; align-items: flex-start;">
+    <!-- Sekcja kalkulatora -->
+    <div style="flex: 1;">
+        <form method="POST" style="max-width: 350px;">
+            <label for="weight">Waga (kg):</label>
+            <input type="number" id="weight" name="weight" step="0.1" required>
+            <br>
+            <label for="height">Wzrost (cm):</label>
+            <input type="number" id="height" name="height" step="0.1" required>
+            <br>
+            <button type="submit">Oblicz BMI</button>
+        </form>
+
+        {% if bmi_value is not none %}
+            <h2>Twoje BMI: {{ bmi_value }}</h2>
+            <p>Kategoria: <strong>{{ category }}</strong></p>
+        {% endif %}
+    </div>
+
+    <!-- Sekcja przedziałki i legendy -->
+    <div style="flex: 2; margin-left: 20px; padding: 10px;">
+        <h3>Przedział BMI</h3>
+        <div style="position: relative; width: 100%; height: 50px; background: linear-gradient(to right, green, yellow, red); margin: 20px 0; border-radius: 5px;">
+            {% if bmi_value is not none %}
+                <div style="position: absolute; left: {{ (bmi_value / 40) * 100 }}%; top: -10px; width: 10px; height: 70px; background-color: black; border-radius: 2px;">
+                </div>
+            {% endif %}
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 12px;">
+            <span>0</span>
+            <span>10</span>
+            <span>20</span>
+            <span>30</span>
+            <span>40</span>
+        </div>
+        <h3>Legenda BMI</h3>
+        <ul>
+            <li><strong>BMI &lt; 18.5:</strong> Niedowaga</li>
+            <li><strong>18.5 ≤ BMI &lt; 24.9:</strong> Waga prawidłowa</li>
+            <li><strong>25 ≤ BMI &lt; 29.9:</strong> Nadwaga</li>
+            <li><strong>BMI ≥ 30:</strong> Otyłość</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

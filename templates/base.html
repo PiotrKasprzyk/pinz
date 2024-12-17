@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My App{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/forum">Forum</a>
+            <a href="/products">Products</a>
+           
+            <a href="/diets">Diets</a>
+            <a href="/exercises">Exercises</a>
+            <a href="/plan">Plan</a>
+            <a href="/bmi">BMI</a>
+            <a href="/opinions">Opinions</a>
+            <a href="/profile">My Profile</a>
+            <a href="/logout">Log Out</a>
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>© FitandWork App Zeus Company</p>
+    </footer>
+</body>
+</html>

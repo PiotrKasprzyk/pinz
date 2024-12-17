@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}My Diets{% endblock %}
+
+{% block content %}
+<h1>My Diets</h1>
+
+<!-- Przycisk dodania nowej diety -->
+<a href="{{ url_for('add_diet') }}" class="btn-add-diet">Add Diet</a>
+
+<!-- Kafelki z dietami -->
+<div class="diet-cards">
+    {% for diet in diets %}
+    <div class="diet-card">
+        <h3>{{ diet.day_of_week }}</h3>
+        <p><strong>Breakfast:</strong> {{ diet.breakfast }}</p>
+        <details>
+            <summary>Recipe</summary>
+            <p>{{ diet.breakfast_recipe[0].details if diet.breakfast_recipe }}</p>
+        </details>
+
+        <p><strong>Second Breakfast:</strong> {{ diet.second_breakfast }}</p>
+        <details>
+            <summary>Recipe</summary>
+            <p>{{ diet.second_breakfast_recipe[0].details if diet.second_breakfast_recipe }}</p>
+        </details>
+
+        <p><strong>Lunch:</strong> {{ diet.lunch }}</p>
+        <details>
+            <summary>Recipe</summary>
+            <p>{{ diet.lunch_recipe[0].details if diet.lunch_recipe }}</p>
+        </details>
+
+        <p><strong>Dinner:</strong> {{ diet.dinner }}</p>
+        <details>
+            <summary>Recipe</summary>
+            <p>{{ diet.dinner_recipe[0].details if diet.dinner_recipe }}</p>
+        </details>
+
+        <p><strong>Snack:</strong> {{ diet.snack }}</p>
+        <details>
+            <summary>Recipe</summary>
+            <p>{{ diet.snack_recipe[0].details if diet.snack_recipe }}</p>
+        </details>
+
+        <!-- Przycisk edycji i usuwania -->
+        <div class="diet-actions">
+            <a href="{{ url_for('edit_diet', diet_id=diet.id) }}" class="btn-edit">Edit</a>
+            <form method="POST" action="{{ url_for('delete_diet', diet_id=diet.id) }}" class="delete-form">
+                <button type="submit" class="btn-delete">Delete</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

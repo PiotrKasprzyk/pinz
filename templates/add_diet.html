@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Diet{% endblock %}
+
+{% block content %}
+<h1>Add New Diet</h1>
+
+<form method="POST">
+    <label for="day_of_week">Day of Week:</label>
+    <select name="day_of_week" id="day_of_week" required>
+        <option value="Monday">Monday</option>
+        <option value="Tuesday">Tuesday</option>
+        <option value="Wednesday">Wednesday</option>
+        <option value="Thursday">Thursday</option>
+        <option value="Friday">Friday</option>
+        <option value="Saturday">Saturday</option>
+        <option value="Sunday">Sunday</option>
+    </select>
+
+    <label for="breakfast">Breakfast:</label>
+    <input type="text" name="breakfast" id="breakfast" required>
+    <label for="breakfast_recipe">Breakfast Recipe:</label>
+    <textarea name="breakfast_recipe" id="breakfast_recipe"></textarea>
+
+    <label for="second_breakfast">Second Breakfast:</label>
+    <input type="text" name="second_breakfast" id="second_breakfast">
+    <label for="second_breakfast_recipe">Second Breakfast Recipe:</label>
+    <textarea name="second_breakfast_recipe" id="second_breakfast_recipe"></textarea>
+
+    <label for="lunch">Lunch:</label>
+    <input type="text" name="lunch" id="lunch" required>
+    <label for="lunch_recipe">Lunch Recipe:</label>
+    <textarea name="lunch_recipe" id="lunch_recipe"></textarea>
+
+    <label for="dinner">Dinner:</label>
+    <input type="text" name="dinner" id="dinner" required>
+    <label for="dinner_recipe">Dinner Recipe:</label>
+    <textarea name="dinner_recipe" id="dinner_recipe"></textarea>
+
+    <label for="snack">Snack:</label>
+    <input type="text" name="snack" id="snack">
+    <label for="snack_recipe">Snack Recipe:</label>
+    <textarea name="snack_recipe" id="snack_recipe"></textarea>
+
+    <button type="submit">Add Diet</button>
+</form>
+
+<a href="{{ url_for('profile_diets') }}" class="btn-back">Back to Diets</a>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Training Plan{% endblock %}
+
+{% block content %}
+<h1 class="text-center">Edit Training Plan</h1>
+
+<div class="form-container">
+    <form method="POST" action="{{ url_for('edit_training_plan', plan_id=plan.id) }}">
+        <div class="form-group">
+            <label for="day_of_week">Day of Week:</label>
+            <select name="day_of_week" id="day_of_week" class="form-control">
+                <option value="Monday" {% if plan.day_of_week == 'Monday' %}selected{% endif %}>Monday</option>
+                <option value="Tuesday" {% if plan.day_of_week == 'Tuesday' %}selected{% endif %}>Tuesday</option>
+                <option value="Wednesday" {% if plan.day_of_week == 'Wednesday' %}selected{% endif %}>Wednesday</option>
+                <option value="Thursday" {% if plan.day_of_week == 'Thursday' %}selected{% endif %}>Thursday</option>
+                <option value="Friday" {% if plan.day_of_week == 'Friday' %}selected{% endif %}>Friday</option>
+                <option value="Saturday" {% if plan.day_of_week == 'Saturday' %}selected{% endif %}>Saturday</option>
+                <option value="Sunday" {% if plan.day_of_week == 'Sunday' %}selected{% endif %}>Sunday</option>
+            </select>
+        </div>
+    
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="start_time">Start Time:</label>
+                <input type="time" name="start_time" id="start_time" class="form-control" value="{{ plan.start_time }}">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="end_time">End Time:</label>
+                <input type="time" name="end_time" id="end_time" class="form-control" value="{{ plan.end_time }}">
+            </div>
+        </div>
+    
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <input type="text" name="category" id="category" class="form-control" value="{{ plan.category }}">
+        </div>
+    
+        <div class="form-group">
+            <label for="exercise">Exercise:</label>
+            <input type="text" name="exercise" id="exercise" class="form-control" value="{{ plan.exercise }}">
+        </div>
+    
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="sets">Sets:</label>
+                <input type="number" name="sets" id="sets" class="form-control" value="{{ plan.sets }}">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="reps">Reps:</label>
+                <input type="number" name="reps" id="reps" class="form-control" value="{{ plan.reps }}">
+            </div>
+        </div>
+    
+        <div class="form-group">
+            <label for="notes">Notes:</label>
+            <textarea name="notes" id="notes" class="form-control">{{ plan.notes }}</textarea>
+        </div>
+    
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a href="{{ url_for('my_training_plan') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+    
+    
+</div>
+{% endblock %}

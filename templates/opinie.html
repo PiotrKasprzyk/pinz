@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Opinions{% endblock %}
+
+{% block content %}
+<h1>Opinions</h1>
+
+<!-- Ogólna ocena aplikacji -->
+<div>
+    <h2>Average Rating: 
+        {% if average_rating %}
+            {{ average_rating }} / 5
+        {% else %}
+            No ratings yet
+        {% endif %}
+    </h2>
+</div>
+
+<hr>
+
+<!-- Formularz dodawania opinii -->
+{% if current_user.is_authenticated %}
+<h3>Leave Your Review</h3>
+<form method="POST" action="/opinions">
+    <textarea name="content" rows="3" placeholder="Write your opinion here..." required></textarea>
+    <div class="rating">
+        <input type="radio" id="star5" name="rating" value="5" required>
+        <label for="star5" title="5 stars">★</label>
+        <input type="radio" id="star4" name="rating" value="4">
+        <label for="star4" title="4 stars">★</label>
+        <input type="radio" id="star3" name="rating" value="3">
+        <label for="star3" title="3 stars">★</label>
+        <input type="radio" id="star2" name="rating" value="2">
+        <label for="star2" title="2 stars">★</label>
+        <input type="radio" id="star1" name="rating" value="1">
+        <label for="star1" title="1 star">★</label>
+    </div>
+    <button type="submit">Submit</button>
+</form>
+
+{% else %}
+<p>You need to <a href="/login">log in</a> to leave a review.</p>
+{% endif %}
+
+<hr>
+
+<!-- Wyświetlanie opinii -->
+<h3>User Reviews</h3>
+{% for review in reviews %}
+<div class="review">
+    <p><strong>User {{ review.user_id }}:</strong> {{ review.content }}</p>
+    <p class="stars">
+        {% for i in range(1, 6) %}
+            {% if i <= review.rating %}
+                <span style="color: #ffc107;">★</span>
+            {% else %}
+                <span style="color: #ccc;">★</span>
+            {% endif %}
+        {% endfor %}
+    </p>
+    <p><small>Posted on {{ review.created_at }}</small></p>
+</div>
+<hr>
+{% endfor %}
+
+{% endblock %}

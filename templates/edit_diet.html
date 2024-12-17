@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Diet{% endblock %}
+
+{% block content %}
+<h1>Edit Diet</h1>
+
+<form method="POST" enctype="multipart/form-data">
+    <label for="day_of_week">Day of Week:</label>
+    <input type="text" id="day_of_week" name="day_of_week" value="{{ diet.day_of_week }}" required>
+
+    <label for="breakfast">Breakfast:</label>
+    <input type="text" id="breakfast" name="breakfast" value="{{ diet.breakfast }}" required>
+
+    <label for="breakfast_recipe">Breakfast Recipe:</label>
+    <textarea id="breakfast_recipe" name="breakfast_recipe">{{ diet.breakfast_recipe[0].details if diet.breakfast_recipe }}</textarea>
+
+    <label for="second_breakfast">Second Breakfast:</label>
+    <input type="text" id="second_breakfast" name="second_breakfast" value="{{ diet.second_breakfast }}" required>
+
+    <label for="second_breakfast_recipe">Second Breakfast Recipe:</label>
+    <textarea id="second_breakfast_recipe" name="second_breakfast_recipe">{{ diet.second_breakfast_recipe[0].details if diet.second_breakfast_recipe }}</textarea>
+
+    <label for="lunch">Lunch:</label>
+    <input type="text" id="lunch" name="lunch" value="{{ diet.lunch }}" required>
+
+    <label for="lunch_recipe">Lunch Recipe:</label>
+    <textarea id="lunch_recipe" name="lunch_recipe">{{ diet.lunch_recipe[0].details if diet.lunch_recipe }}</textarea>
+
+    <label for="dinner">Dinner:</label>
+    <input type="text" id="dinner" name="dinner" value="{{ diet.dinner }}" required>
+
+    <label for="dinner_recipe">Dinner Recipe:</label>
+    <textarea id="dinner_recipe" name="dinner_recipe">{{ diet.dinner_recipe[0].details if diet.dinner_recipe }}</textarea>
+
+    <label for="snack">Snack:</label>
+    <input type="text" id="snack" name="snack" value="{{ diet.snack }}" required>
+
+    <label for="snack_recipe">Snack Recipe:</label>
+    <textarea id="snack_recipe" name="snack_recipe">{{ diet.snack_recipe[0].details if diet.snack_recipe }}</textarea>
+
+    <button type="submit" class="btn-submit">Save Changes</button>
+</form>
+{% endblock %}

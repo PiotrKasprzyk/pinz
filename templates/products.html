@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<h1>Healthy Products</h1>
+
+<!-- Formularz filtrowania -->
+<form method="GET" action="/products" class="filter-form">
+    <div class="filter-row">
+        <label for="category">Category:</label>
+        <select name="category" id="category">
+            <option value="All">All</option>
+            {% for cat in categories %}
+            <option value="{{ cat }}" {% if request.args.get('category') == cat %}selected{% endif %}>{{ cat }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="filter-row">
+        <label for="min_proteins">Min Proteins (g):</label>
+        <input type="number" name="min_proteins" id="min_proteins" value="{{ request.args.get('min_proteins', '') }}">
+
+        <label for="max_sugars">Max Sugars (g):</label>
+        <input type="number" name="max_sugars" id="max_sugars" value="{{ request.args.get('max_sugars', '') }}">
+    </div>
+    <div class="filter-row">
+        <label for="min_fats">Min Fats (g):</label>
+        <input type="number" name="min_fats" id="min_fats" value="{{ request.args.get('min_fats', '') }}">
+
+        <label for="max_fats">Max Fats (g):</label>
+        <input type="number" name="max_fats" id="max_fats" value="{{ request.args.get('max_fats', '') }}">
+    </div>
+    <div class="filter-row">
+        <label for="min_health_score">Min Health Score:</label>
+        <input type="number" step="0.1" name="min_health_score" id="min_health_score" value="{{ request.args.get('min_health_score', '') }}">
+
+        <label for="max_health_score">Max Health Score:</label>
+        <input type="number" step="0.1" name="max_health_score" id="max_health_score" value="{{ request.args.get('max_health_score', '') }}">
+    </div>
+    <div class="filter-row">
+        <label for="sort_by">Sort By:</label>
+        <select name="sort_by" id="sort_by">
+            <option value="">Default</option>
+            <option value="name" {% if request.args.get('sort_by') == 'name' %}selected{% endif %}>Name</option>
+            <option value="health_score" {% if request.args.get('sort_by') == 'health_score' %}selected{% endif %}>Health Score</option>
+        </select>
+    </div>
+    <div class="filter-row">
+        <button type="submit">Filter</button>
+        <a href="/products" class="reset-button">Reset</a>
+    </div>
+</form>
+
+
+<hr>
+
+<!-- Kafelki produktów -->
+<div class="product-cards">
+    {% for product in products %}
+    <div class="product-card">
+        {% if product.image %}
+        <img src="{{ url_for('static', filename=product.image.split('static/')[-1]) }}" alt="{{ product.name }}" class="product-image">
+        {% else %}
+        <img src="/static/images/placeholder.jpg" alt="No Image Available" class="product-image">
+        {% endif %}
+        <h2>{{ product.name }}</h2>
+        <p><strong>Category:</strong> {{ product.category }}</p>
+        <p><strong>Proteins:</strong> {{ product.proteins }}g</p>
+        <p><strong>Carbs:</strong> {{ product.carbs }}g (of which sugars: {{ product.sugars }}g)</p>
+        <p><strong>Fats:</strong> {{ product.fats }}g (saturated: {{ product.saturated_fats }}g)</p>
+        <p><strong>Salt:</strong> {{ product.salt }}g</p>
+        <p><strong>Health Score:</strong> {{ product.health_score }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

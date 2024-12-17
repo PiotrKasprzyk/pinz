@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Training Plan{% endblock %}
+
+{% block content %}
+<h1>Add Training Plan</h1>
+<form method="POST" action="/profile/training-plan/add">
+    <label for="day_of_week">Day of the Week:</label>
+    <select name="day_of_week" required>
+        <option value="Monday">Monday</option>
+        <option value="Tuesday">Tuesday</option>
+        <option value="Wednesday">Wednesday</option>
+        <option value="Thursday">Thursday</option>
+        <option value="Friday">Friday</option>
+        <option value="Saturday">Saturday</option>
+        <option value="Sunday">Sunday</option>
+    </select>
+
+    <label for="start_time">Start Time:</label>
+    <input type="time" name="start_time" required>
+
+    <label for="end_time">End Time:</label>
+    <input type="time" name="end_time" required>
+
+    <h3>Exercises</h3>
+    <div id="exercise-container">
+        <div class="exercise-group">
+            <label for="category">Category:</label>
+            <input type="text" name="category[]" placeholder="Category" required>
+
+            <label for="exercise">Exercise:</label>
+            <input type="text" name="exercise[]" placeholder="Exercise" required>
+
+            <label for="sets">Sets:</label>
+            <input type="number" name="sets[]" placeholder="Sets" required>
+
+            <label for="reps">Reps:</label>
+            <input type="text" name="reps[]" placeholder="Reps" required>
+        </div>
+    </div>
+
+    <button type="button" id="add-exercise-btn">Add Exercise</button>
+
+    <label for="notes">Notes:</label>
+    <textarea name="notes" rows="3"></textarea>
+
+    <button type="submit">Save Plan</button>
+</form>
+
+<script>
+    document.getElementById('add-exercise-btn').addEventListener('click', function() {
+        const container = document.getElementById('exercise-container');
+        const newGroup = document.createElement('div');
+        newGroup.classList.add('exercise-group');
+        newGroup.innerHTML = `
+            <label for="category">Category:</label>
+            <input type="text" name="category[]" placeholder="Category" required>
+
+            <label for="exercise">Exercise:</label>
+            <input type="text" name="exercise[]" placeholder="Exercise" required>
+
+            <label for="sets">Sets:</label>
+            <input type="number" name="sets[]" placeholder="Sets" required>
+
+            <label for="reps">Reps:</label>
+            <input type="text" name="reps[]" placeholder="Reps" required>
+        `;
+        container.appendChild(newGroup);
+    });
+</script>
+{% endblock %}

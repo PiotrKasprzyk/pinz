@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Personal Details{% endblock %}
+
+{% block content %}
+<h1>My Profile</h1>
+
+<div class="profile-card">
+    {% if user.profile_image %}
+    <img src="{{ url_for('static', filename=user.profile_image) }}" alt="Profile Image" class="profile-image">
+    {% else %}
+    <img src="{{ url_for('static', filename='default_profile.png') }}" alt="Default Profile Image" class="profile-image">
+    {% endif %}
+
+    <div class="profile-info">
+        <p><strong>First Name:</strong> {{ user.first_name or 'Not provided' }}</p>
+        <p><strong>Last Name:</strong> {{ user.last_name or 'Not provided' }}</p>
+        <p><strong>Date of Birth:</strong> {{ user.birth_date or 'Not provided' }}</p>
+        <p><strong>Age:</strong> {{ user.age or 'Not provided' }}</p>
+        <p><strong>Weight:</strong> {{ user.weight or 'Not provided' }} kg</p>
+        <p><strong>Height:</strong> {{ user.height or 'Not provided' }} cm</p>
+        <p><strong>Weight Goal:</strong> {{ user.weight_goal or 'Not provided' }} kg</p>
+        <p><strong>Bio:</strong> {{ user.bio or 'Not provided' }}</p>
+        <p><strong>Favorite Foods:</strong> {{ user.favorite_foods or 'Not provided' }}</p>
+        <p><strong>Favorite Products:</strong> {{ user.favorite_products or 'Not provided' }}</p>
+    </div>
+
+    <a href="{{ url_for('edit_profile_details') }}" class="btn-edit">Edit</a><a href="{{ url_for('profile') }}" class="btn-back">Back to Profile</a>
+
+</div>
+{% endblock %}

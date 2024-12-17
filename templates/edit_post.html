@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Post{% endblock %}
+
+{% block content %}
+<h1>Edit Post</h1>
+<form method="POST" enctype="multipart/form-data">
+    <label for="title">Title:</label>
+    <input type="text" name="title" id="title" value="{{ post.title }}" required>
+    
+    <label for="content">Content:</label>
+    <textarea name="content" id="content" rows="5" required>{{ post.content }}</textarea>
+    
+    <label for="image">Image:</label>
+    <input type="file" name="image" id="image">
+    
+    {% if post.image %}
+    <p>Current Image:</p>
+    <img src="{{ url_for('static', filename=post.image) }}" alt="Current Post Image" style="max-width: 300px;">
+    {% endif %}
+    
+    <button type="submit" class="btn-save">Save Changes</button>
+    <a href="{{ url_for('forum') }}" class="btn-cancel">Cancel</a>
+</form>
+{% endblock %}

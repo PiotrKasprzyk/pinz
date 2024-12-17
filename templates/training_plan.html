@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}My Training Plan{% endblock %}
+
+{% block content %}
+<h1>My Training Plan</h1>
+
+<a href="{{ url_for('add_training_plan') }}" class="btn btn-primary">Add New Training Plan</a>
+
+<div class="training-plans">
+    {% for plan in grouped_plans %}
+    <div class="training-card">
+        <h3><strong>{{ plan.day_of_week }}</strong></h3>
+        <p><strong>Time:</strong> {{ plan.start_time }} - {{ plan.end_time }}</p>
+        
+        <h4>Exercises:</h4>
+        <ul>
+            {% for exercise in plan.exercises %}
+            <li>
+                <strong>Category:</strong> {{ exercise.category }}<br>
+                <strong>Exercise:</strong> {{ exercise.exercise }}<br>
+                <strong>Sets:</strong> {{ exercise.sets }}<br>
+                <strong>Reps:</strong> {{ exercise.reps }}<br>
+                <strong>Notes:</strong> {{ exercise.notes or 'N/A' }}
+            </li>
+            {% endfor %}
+        </ul>
+        <form method="POST" action="{{ url_for('delete_training_plan', plan_id=plan.id) }}" style="display:inline;">
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+        <a href="{{ url_for('edit_training_plan', plan_id=plan.id) }}" class="btn btn-primary">Edit</a>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .training-plans {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .training-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 2px 2px 12px #ddd;
+        width: 45%;
+        background-color: #f9f9f9;
+    }
+
+    .training-card h3 {
+        margin: 0 0 10px;
+        color: #007BFF;
+    }
+
+    .training-card ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .training-card li {
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Journal Entry{% endblock %}
+
+{% block content %}
+<h1>Edit Journal Entry</h1>
+
+<form method="POST" action="{{ url_for('edit_journal_entry', entry_id=entry.id) }}">
+    <label for="date">Date:</label>
+    <input type="date" name="date" id="date" value="{{ entry.date }}" required>
+
+    <label for="day_of_week">Day of the Week:</label>
+    <input type="text" name="day_of_week" id="day_of_week" value="{{ entry.day_of_week }}" required>
+
+    <h3>Meals</h3>
+    <label for="breakfast">Breakfast:</label>
+    <textarea name="breakfast" id="breakfast">{{ entry.breakfast }}</textarea>
+
+    <label for="second_breakfast">Second Breakfast:</label>
+    <textarea name="second_breakfast" id="second_breakfast">{{ entry.second_breakfast }}</textarea>
+
+    <label for="lunch">Lunch:</label>
+    <textarea name="lunch" id="lunch">{{ entry.lunch }}</textarea>
+
+    <label for="dinner">Dinner:</label>
+    <textarea name="dinner" id="dinner">{{ entry.dinner }}</textarea>
+
+    <label for="snack">Snack:</label>
+    <textarea name="snack" id="snack">{{ entry.snack }}</textarea>
+
+    <h3>Workout</h3>
+    <div id="workouts">
+        {% for workout in entry.workout_details %}
+        <div class="workout">
+            <label>Workout Type:</label>
+            <input type="text" name="workout_type" value="{{ workout.type }}" required>
+            <label>Reps:</label>
+            <input type="text" name="workout_reps" value="{{ workout.reps }}">
+            <label>Notes:</label>
+            <textarea name="workout_notes">{{ workout.notes }}</textarea>
+        </div>
+        {% endfor %}
+    </div>
+    <button type="button" onclick="addWorkout()">Add Workout</button>
+
+    <label for="conclusions">Conclusions:</label>
+    <textarea name="conclusions" id="conclusions">{{ entry.conclusions }}</textarea>
+
+    <button type="submit">Save Changes</button>
+</form>
+
+<script>
+    function addWorkout() {
+        const workoutsDiv = document.getElementById('workouts');
+        const newWorkout = document.createElement('div');
+        newWorkout.classList.add('workout');
+        newWorkout.innerHTML = `
+            <label>Workout Type:</label>
+            <input type="text" name="workout_type" required>
+            <label>Reps:</label>
+            <input type="text" name="workout_reps">
+            <label>Notes:</label>
+            <textarea name="workout_notes"></textarea>
+        `;
+        workoutsDiv.appendChild(newWorkout);
+    }
+</script>
+{% endblock %}

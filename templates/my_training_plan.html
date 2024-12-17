@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}My Training Plan{% endblock %}
+
+{% block content %}
+<h1>My Training Plan</h1>
+
+<a href="{{ url_for('add_training_plan') }}" class="btn btn-primary">Add Training Plan</a>
+
+<div class="training-plan-grid">
+    {% for plan in plans %}
+    <div class="training-plan-card">
+        <h3>{{ plan.day_of_week }}</h3>
+        <p><strong>Time:</strong> {{ plan.start_time }} - {{ plan.end_time }}</p>
+        <p><strong>Category:</strong> {{ plan.category }}</p>
+        <p><strong>Exercise:</strong> {{ plan.exercise }}</p>
+        <p><strong>Sets:</strong> {{ plan.sets }}</p>
+        <p><strong>Reps:</strong> {{ plan.reps }}</p>
+        <p><strong>Thoughts:</strong> {{ plan.notes }}</p>
+    </div>
+    {% else %}
+    <p>No training plans added yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

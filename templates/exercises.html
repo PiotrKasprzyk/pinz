@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Exercises{% endblock %}
+
+{% block content %}
+<h1>Exercises</h1>
+
+<div class="exercise-cards">
+    <!-- Kafelek Home Exercises -->
+    <div class="exercise-card">
+        <img src="/static/images/home_exercises.webp" alt="Home Exercises" class="exercise-category-image">
+        <h2>Home Exercises</h2>
+        <p>Explore exercises you can do at home.</p>
+        <a href="/exercises/home" class="exercise-button">View Home Exercises</a>
+    </div>
+    <!-- Kafelek Gym Exercises -->
+    <div class="exercise-card">
+        <img src="/static/images/gym_exercises.webp" alt="Gym Exercises" class="exercise-category-image">
+        <h2>Gym Exercises</h2>
+        <p>Explore exercises you can do at the gym.</p>
+        <a href="/exercises/gym" class="exercise-button">View Gym Exercises</a>
+    </div>
+</div>
+{% endblock %}

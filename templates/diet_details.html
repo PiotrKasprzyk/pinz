@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Diet Details{% endblock %}
+
+{% block content %}
+<h1>{{ diet.name }}</h1>
+<p><strong>Wiek:</strong> {{ diet.wiek }}</p>
+<p><strong>Gender:</strong> {{ diet.gender }}</p>
+<p><strong>Activity Level:</strong> {{ diet.activity_level }}</p>
+<p><strong>Preferences:</strong> {{ diet.preferences or 'None' }}</p>
+<p><strong>Exclusions:</strong> {{ diet.exclusions or 'None' }}</p>
+<p><strong>Other:</strong> {{ diet.other_details or 'None' }}</p>
+
+<hr>
+
+<h2>Meal Plan</h2>
+<div class="meal-plan">
+    <h3>Breakfast</h3>
+    <p>{{ diet.breakfast }}</p>
+
+    <h3>Second Breakfast</h3>
+    <p>{{ diet.second_breakfast or 'None' }}</p>
+
+    <h3>Lunch</h3>
+    <p>{{ diet.lunch }}</p>
+
+    <h3>Snack</h3>
+    <p>{{ diet.snack or 'None' }}</p>
+
+    <h3>Dinner</h3>
+    <p>{{ diet.dinner }}</p>
+</div>
+<a href="/diets" class="back-button">Back to Diets</a>
+{% endblock %}
