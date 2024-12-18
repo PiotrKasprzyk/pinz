@@ -6,28 +6,24 @@
     <title>{% block title %}My App{% endblock %}</title>
     <link rel="stylesheet" href="/static/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.22/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
 
 </head>
 <body>
+    <div class="navbar bg-base-100">
+        <button class="btn glass"><a  href="/">Strona główna</a></button>
+        <button class="btn glass"><a href="/forum">Forum</a></button>
+        <button class="btn glass"><a href="/products">Produkty spożywcze</a></button>
+        <button class="btn glass"><a href="/diets">Dieta</a></button>
+        <button class="btn glass"><a href="/exercises">Ćwiczenia Fizyczne</a></button>
+        <button class="btn glass"><a href="/plan">Plan Treningowy</a></button>
+        <button class="btn glass"><a href="/bmi">Kalkulator BMI</a></button>
+        <button class="btn glass"><a href="/opinions">Opinie</a></button>
+        <button class="btn glass"><a href="/profile">Mój profil</a></button>
+        <button class="btn glass"><a href="/logout">Wyloguj</a></button>
+    </div>
     
-    <header >
-        <nav>
-            <a  href="/">Strona główna</a>
-            <a href="/forum">Forum</a>
-            <a href="/products">Produkty spożywcze</a>
-           
-            <a href="/diets">Dieta</a>
-            <a href="/exercises">Ćwiczenia Fizyczne</a>
-            <a href="/plan">Plan Treningowy</a>
-            <a href="/bmi">Kalkulator BMI</a>
-            <a href="/opinions">Opinie</a>
-            <a href="/profile">Mój profil</a>
-            <a href="/logout">Wyloguj</a>
-           
-        </nav>
-        
-    </header>
     <main>
         {% block content %}{% endblock %}
     </main>

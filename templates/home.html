@@ -9,31 +9,59 @@
         <p>Ready to continue your fitness journey? Check out your <a href="/profile">profile</a>.</p>
     {% else %}
         <h1>Welcome to My Fitness App</h1>
-        <p>Your journey to better health starts here. <a href="/register">Register</a> or <a href="/login">log in</a> to get started!</p>
+        <p>Your journey to better health starts here. <button class="btn glass"><a href="/register">Zarejestruj się</a></button> lub <button class="btn glass"><a href="/login">Zaloguj się</a></button> to get started!</p>
     {% endif %}
 </section>
 
 <section class="features">
     <h2>What We Offer</h2>
     <div class="feature-list">
-        <div class="feature-item">
-            <img src="/static/images/diet.jpg" alt="Diet">
-            <h3>Personalized Diet Plans</h3>
-            <p>Create a meal plan tailored to your goals.</p>
-            <a href="/diets">Explore Diets</a>
-        </div>
-        <div class="feature-item">
-            <img src="/static/images/exercise.jpg" alt="Exercise">
-            <h3>Workout Programs</h3>
-            <p>Follow structured workout routines.</p>
-            <a href="/exercises">View Workouts</a>
-        </div>
-        <div class="feature-item">
-            <img src="/static/images/forum.jpg" alt="Forum">
-            <h3>Community Forum</h3>
-            <p>Connect with others and share tips.</p>
-            <a href="/forum">Visit Forum</a>
-        </div>
+        
+        <div class="card glass w-96">
+            <figure>
+              <img
+                src="/static/images/diet.jpg" 
+                alt="Diet" />
+            </figure>
+            <div class="card-body items-center text-center">
+              <h2 class="card-title">Personalized Diet Plans</h2>
+              <p>Create a meal plan tailored to your goals.</p>
+              <div class="card-actions">
+                <button class="btn glass"><a href="/diets">Explore Diets</a></button>
+              </div>
+            </div>
+          </div>
+          <div class="card glass w-96">
+            <figure>
+              <img
+                img src="/static/images/exercise.jpg" 
+                alt="Exercise" />
+            </figure>
+            <div class="card-body items-center text-center">
+              <h2 class="card-title">Workout Programs</h2>
+              <p>Follow structured workout routines.</p>
+              <div class="card-actions">
+                <button class="btn glass"><a href="/diets">View Workouts</a></button>
+              </div>
+            </div>
+          </div>
+          <div class="card glass w-96">
+            <figure>
+              <img
+                img src="/static/images/forum.jpg" 
+                alt="Forum"
+                 />
+            </figure>
+            <div class="card-body items-center text-center">
+              <h2 class="card-title">Community Forum</h2>
+              <p>Connect with others and share tips.</p>
+              <div class="card-actions">
+                <button class="btn glass"><a href="/diets">Visit Forum</a></button>
+              </div>
+            </div>
+          </div>
+        
+        
     </div>
 </section>
 
