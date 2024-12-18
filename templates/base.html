@@ -6,29 +6,35 @@
     <title>{% block title %}My App{% endblock %}</title>
     <link rel="stylesheet" href="/static/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
 
 </head>
 <body>
-    <header>
+    
+    <header >
         <nav>
-            <a href="/">Home</a>
+            <a  href="/">Strona główna</a>
             <a href="/forum">Forum</a>
-            <a href="/products">Products</a>
+            <a href="/products">Produkty spożywcze</a>
            
-            <a href="/diets">Diets</a>
-            <a href="/exercises">Exercises</a>
-            <a href="/plan">Plan</a>
-            <a href="/bmi">BMI</a>
-            <a href="/opinions">Opinions</a>
-            <a href="/profile">My Profile</a>
-            <a href="/logout">Log Out</a>
+            <a href="/diets">Dieta</a>
+            <a href="/exercises">Ćwiczenia Fizyczne</a>
+            <a href="/plan">Plan Treningowy</a>
+            <a href="/bmi">Kalkulator BMI</a>
+            <a href="/opinions">Opinie</a>
+            <a href="/profile">Mój profil</a>
+            <a href="/logout">Wyloguj</a>
+           
         </nav>
+        
     </header>
     <main>
         {% block content %}{% endblock %}
     </main>
-    <footer>
-        <p>© FitandWork App Zeus Company</p>
-    </footer>
+    <footer class="footer footer-center bg-base-300 text-base-content p-4">
+        <aside>
+          <p>Copyright © {new Date().getFullYear()} - ZeusLifeGoodStyle</p>
+        </aside>
+      </footer>
 </body>
 </html>
