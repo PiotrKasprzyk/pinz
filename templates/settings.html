@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<h1>Settings</h1>
+
+<!-- Formularz zmiany e-mail -->
+<form method="POST">
+    <h3>Change Email</h3>
+    <label for="email">Current Email:</label>
+    <input type="email" name="email" value="{{ current_email }}" required>
+    <button type="submit">Update Email</button>
+</form>
+
+<!-- Formularz zmiany hasła -->
+<form method="POST">
+    <h3>Change Password</h3>
+    <label for="current_password">Current Password:</label>
+    <input type="password" name="current_password" placeholder="Enter current password" required>
+    <label for="new_password">New Password:</label>
+    <input type="password" name="new_password" placeholder="Enter new password" required>
+    <button type="submit">Update Password</button>
+</form>
+
+<!-- Generowanie raportu -->
+<h3>Generate Report</h3>
+<a href="{{ url_for('generate_report') }}" class="btn btn-primary">Generate PDF Report</a>
+{% endblock %}

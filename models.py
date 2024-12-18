@@ -9,6 +9,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(100), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    is_verified = db.Column(db.Boolean, default=False)
     profile_image = db.Column(db.String(300), nullable=True) 
     first_name = db.Column(db.String(50), nullable=True)
     last_name = db.Column(db.String(50), nullable=True)
@@ -19,7 +20,9 @@ class User(db.Model, UserMixin):
     birth_date = db.Column(db.Date, nullable=True)  
     weight_goal = db.Column(db.Float, nullable=True)  
     favorite_foods = db.Column(db.Text, nullable=True)  
-    favorite_products = db.Column(db.Text, nullable=True)  
+    favorite_products = db.Column(db.Text, nullable=True)
+    diets = db.relationship('Diets', backref='user', lazy=True)
+    training_plan = db.relationship('TrainingPlan', backref='user', lazy=True)
     @staticmethod
     def get(user_id):
         return User.query.get(int(user_id))
@@ -147,7 +150,7 @@ class JournalEntry(db.Model):
 class Recipe(db.Model):
     __tablename__ = 'recipe'
     id = db.Column(db.Integer, primary_key=True)
-    
+    content = db.Column(db.Text, nullable=False)
     
     breakfast_id = db.Column(db.Integer, db.ForeignKey('diets.id'), nullable=True)
     second_breakfast_id = db.Column(db.Integer, db.ForeignKey('diets.id'), nullable=True)
@@ -186,7 +189,18 @@ class TrainingPlan(db.Model):
     notes = db.Column(db.Text, nullable=True)              
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     
-    user = db.relationship('User', backref='training_plans')
+    #user = db.relationship('User', backref='training_plans')
+class Achievement(db.Model):
+    __tablename__ = 'achievement'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    category = db.Column(db.String(50), nullable=False)  # np. 'Diet', 'Training', 'Profile'
+    achieved_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    icon = db.Column(db.String(300), nullable=True)  # Ścieżka do ikony odznaki
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    user = db.relationship('User', backref='achievements')
 
 
 

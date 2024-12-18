@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from models import User, Post, Like, Comment,db, CommentLike, Review,Product,Diet, Exercise, PostLike,JournalEntry,Diets,Recipe,TrainingPlan
+from models import User, Post, Like, Comment,db, CommentLike, Review,Product,Diet, Exercise, PostLike,JournalEntry,Diets,Recipe,TrainingPlan,Achievement
 import os
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -19,8 +19,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 UPLOAD_FOLDER = 'static/uploads'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-# Inicjalizacja bazy danych
+
 with app.app_context():
     db.create_all()
 @login_manager.user_loader
@@ -43,7 +42,7 @@ def reset_request():
             token = s.dumps(user.email, salt='reset-password')
             reset_url = url_for('reset_token', token=token, _external=True)
 
-            
+           
             resend.Emails.send({
                 "from": "onboarding@resend.dev",
                 "to": email,
@@ -55,6 +54,7 @@ def reset_request():
             flash('No account with that email exists.', 'danger')
 
     return render_template('reset_request.html')
+
 
 @app.route('/reset-password/<token>', methods=['GET', 'POST'])
 def reset_token(token):
@@ -76,6 +76,7 @@ def reset_token(token):
 
     return render_template('reset_token.html')
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -83,14 +84,20 @@ def login():
         password = request.form['password']
         user = User.query.filter_by(email=email).first()
 
-        if user and check_password_hash(user.password, password):
+        if not user:
+            flash('No account with that email exists.', 'danger')
+        elif not user.is_verified:
+            flash('Please verify your email before logging in.', 'danger')
+        elif check_password_hash(user.password, password):
             login_user(user)
             flash('Logged in successfully!', 'success')
             return redirect(url_for('home'))
         else:
-            flash('Invalid email or password', 'danger')
+            flash('Invalid email or password.', 'danger')
 
     return render_template('login.html')
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -100,7 +107,7 @@ def register():
         confirm_password = request.form['confirm_password']
         terms_accepted = request.form.get('terms')
 
-        
+       
         if password != confirm_password:
             flash('Passwords do not match', 'danger')
             return redirect(url_for('register'))
@@ -109,24 +116,53 @@ def register():
             flash('You must accept the terms and conditions', 'danger')
             return redirect(url_for('register'))
 
-      
         if User.query.filter_by(email=email).first():
             flash('Email already registered', 'danger')
             return redirect(url_for('register'))
 
         
         hashed_password = generate_password_hash(password)
-
-        
-        new_user = User(username=username, email=email, password=hashed_password)
+        new_user = User(username=username, email=email, password=hashed_password, is_verified=False)
         db.session.add(new_user)
         db.session.commit()
 
-        flash('Registration successful! Please log in.', 'success')
+       
+        token = s.dumps(email, salt='email-verification')
+        verification_url = url_for('verify_email', token=token, _external=True)
+
+    
+        resend.Emails.send({
+            "from": "onboarding@resend.dev",
+            "to": email,
+            "subject": "Verify your account",
+            "html": f"<p>Click <a href='{verification_url}'>here</a> to verify your account.</p>"
+        })
+
+        flash('Registration successful! Please verify your email.', 'info')
         return redirect(url_for('login'))
 
     return render_template('register.html')
 
+    
+@app.route('/verify/<token>')
+def verify_email(token):
+    try:
+        email = s.loads(token, salt='email-verification', max_age=3600)
+    except Exception:
+        flash('The verification link is invalid or has expired.', 'danger')
+        return redirect(url_for('register'))
+
+    user = User.query.filter_by(email=email).first()
+    if user and not user.is_verified:
+        user.is_verified = True
+        db.session.commit()
+        flash('Your account has been verified! You can now log in.', 'success')
+    elif user.is_verified:
+        flash('Your account is already verified.', 'info')
+    else:
+        flash('Verification failed. Please try again.', 'danger')
+
+    return redirect(url_for('login'))
 
 
 @app.route('/logout')
@@ -1130,7 +1166,260 @@ def edit_training_plan(plan_id):
             return redirect(url_for('edit_training_plan', plan_id=plan_id))
 
     return render_template('edit_training_plan.html', plan=plan)
+@app.route('/profile/achievements')
+@login_required
+def achievements():
+    category = request.args.get('category')  
+    query = Achievement.query.filter_by(user_id=current_user.id)
+    
+    if category:  
+        query = query.filter_by(category=category)
 
+    user_achievements = query.all()
+    categories = Achievement.query.with_entities(Achievement.category).distinct().all()
+    categories = [c[0] for c in categories] 
+    
+    return render_template(
+        'achievements.html', 
+        achievements=user_achievements, 
+        categories=categories, 
+        selected_category=category
+    )
+
+def get_user_achievements(user_id):
+    """ Pobiera osiągnięcia użytkownika. """
+    return Achievement.query.filter_by(user_id=user_id).all()
+
+@app.route('/profile/update', methods=['POST'])
+@login_required
+def update_profile():
+    """ Aktualizuje profil użytkownika i sprawdza osiągnięcia. """
+    user = current_user
+    user.first_name = request.form.get('first_name')
+    user.last_name = request.form.get('last_name')
+    user.age = request.form.get('age')
+    user.bio = request.form.get('bio')
+    user.weight = request.form.get('weight')
+    user.height = request.form.get('height')
+    user.birth_date = request.form.get('birth_date')
+    user.weight_goal = request.form.get('weight_goal')
+    user.favorite_foods = request.form.get('favorite_foods')
+    user.favorite_products = request.form.get('favorite_products')
+
+    
+    if all([user.first_name, user.last_name, user.age, user.weight, user.height]):
+        existing_achievement = Achievement.query.filter_by(
+            user_id=user.id, title="Profile Complete").first()
+        if not existing_achievement:
+            add_achievement(
+                user.id,
+                title="Profile Complete",
+                description="You completed your profile!",
+                category="Profile",
+                icon="icons/profile_complete.png"
+            )
+
+    db.session.commit()
+    flash("Profile updated successfully!", "success")
+    return redirect(url_for('profile_details'))
+
+def check_and_award_achievements(user):
+    """Sprawdza i przyznaje osiągnięcia użytkownikowi."""
+
+   
+    if user.first_name and user.last_name and user.age and user.weight and user.height:
+        if not Achievement.query.filter_by(user_id=user.id, title="Profile Complete").first():
+            add_achievement(
+                user.id,
+                title="Profile Complete",
+                description="You completed your profile!",
+                category="Profile",
+                icon="icons/profile_complete.png"
+            )
+
+    journal_count = JournalEntry.query.filter_by(user_id=user.id).count()
+    if journal_count >= 1:
+        if not Achievement.query.filter_by(user_id=user.id, title="First Journal Entry").first():
+            add_achievement(
+                user.id,
+                title="First Journal Entry",
+                description="You added your first journal entry!",
+                category="Journal",
+                icon="icons/first_journal.png"
+            )
+
+    
+    training_plan_count = TrainingPlan.query.filter_by(user_id=user.id).count()
+    if training_plan_count >= 1:
+        if not Achievement.query.filter_by(user_id=user.id, title="First Training Plan").first():
+            add_achievement(
+                user.id,
+                title="First Training Plan",
+                description="You created your first training plan!",
+                category="Training",
+                icon="icons/first_training.png"
+            )
+
+    
+    diet_count = Diets.query.filter_by(user_id=user.id).count()
+    if diet_count >= 1:
+        if not Achievement.query.filter_by(user_id=user.id, title="First Diet Plan").first():
+            add_achievement(
+                user.id,
+                title="First Diet Plan",
+                description="You created your first diet plan!",
+                category="Diet",
+                icon="icons/first_diet.png"
+            )
+
+    
+    if user.weight and user.weight_goal and float(user.weight) <= float(user.weight_goal):
+        if not Achievement.query.filter_by(user_id=user.id, title="Weight Goal Achieved").first():
+            add_achievement(
+                user.id,
+                title="Weight Goal Achieved",
+                description="You reached your target weight!",
+                category="Diet",
+                icon="icons/weight_goal.png"
+            )
+
+    
+    if check_journal_streak(user.id, days=7):
+        if not Achievement.query.filter_by(user_id=user.id, title="Consistency Champion").first():
+            add_achievement(
+                user.id,
+                title="Consistency Champion",
+                description="You've maintained a streak of 7 days in your journal!",
+                category="Journal",
+                icon="icons/consistency_champion.png"
+            )
+
+    db.session.commit()
+
+
+def award_achievement(user, title, description, category, icon):
+    """Dodaje osiągnięcie użytkownikowi, jeśli jeszcze go nie ma."""
+    if not Achievement.query.filter_by(user_id=user.id, title=title).first():
+        new_achievement = Achievement(
+            user_id=user.id,
+            title=title,
+            description=description,
+            category=category,
+            icon=icon
+        )
+        db.session.add(new_achievement)
+def check_journal_streak(user_id, days):
+    """Sprawdza, czy użytkownik dodał wpisy przez 'days' dni z rzędu."""
+    entries = JournalEntry.query.filter_by(user_id=user_id).order_by(JournalEntry.date.desc()).all()
+    if len(entries) < days:
+        return False
+
+    current_streak = 1
+    for i in range(1, len(entries)):
+        delta = (entries[i - 1].date - entries[i].date).days
+        if delta == 1:
+            current_streak += 1
+        else:
+            break
+    return current_streak >= days
+def add_achievement(user_id, title, description, category, icon):
+    """ Dodaje osiągnięcie użytkownikowi. """
+    achievement = Achievement(
+        user_id=user_id,
+        title=title,
+        description=description,
+        category=category,
+        icon=icon
+    )
+    db.session.add(achievement)
+    db.session.commit()
+from flask import render_template, request, redirect, url_for, flash, send_file
+from flask_login import login_required, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
+from io import BytesIO
+from reportlab.pdfgen import canvas
+
+@app.route('/profile/settings', methods=['GET', 'POST'])
+@login_required
+def settings():
+    if request.method == 'POST':
+        
+        if 'email' in request.form:
+            new_email = request.form['email']
+            if User.query.filter_by(email=new_email).first():
+                flash("This email is already in use.", "danger")
+            else:
+                current_user.email = new_email
+                db.session.commit()
+                flash("Email updated successfully!", "success")
+
+       
+        elif 'current_password' in request.form and 'new_password' in request.form:
+            current_password = request.form['current_password']
+            new_password = request.form['new_password']
+            if check_password_hash(current_user.password, current_password):
+                current_user.password = generate_password_hash(new_password)
+                db.session.commit()
+                flash("Password updated successfully!", "success")
+            else:
+                flash("Current password is incorrect.", "danger")
+    
+    return render_template('settings.html', current_email=current_user.email)
+
+
+from fpdf import FPDF
+from datetime import datetime
+
+@app.route('/generate_report')
+@login_required
+def generate_report():
+    user = current_user 
+    date_generated = datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
+
+    
+    diets = Diets.query.filter_by(user_id=user.id).all()
+    training_plans = TrainingPlan.query.filter_by(user_id=user.id).all()
+
+    
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    
+    pdf.cell(200, 10, txt="User Report", ln=True, align="C")
+    pdf.ln(5)
+    pdf.cell(200, 10, txt=f"Username: {user.username}", ln=True)
+    pdf.cell(200, 10, txt=f"Date Generated: {date_generated}", ln=True)
+    pdf.ln(5)
+
+    
+    pdf.cell(200, 10, txt="My Diets:", ln=True, align="L")
+    pdf.ln(5)
+    for diet in diets:
+        pdf.cell(200, 10, txt=f"Day: {diet.day_of_week}", ln=True)
+        pdf.cell(200, 10, txt=f"  - Breakfast: {diet.breakfast or 'N/A'}", ln=True)
+        pdf.cell(200, 10, txt=f"  - Second Breakfast: {diet.second_breakfast or 'N/A'}", ln=True)
+        pdf.cell(200, 10, txt=f"  - Lunch: {diet.lunch or 'N/A'}", ln=True)
+        pdf.cell(200, 10, txt=f"  - Dinner: {diet.dinner or 'N/A'}", ln=True)
+        pdf.cell(200, 10, txt=f"  - Snack: {diet.snack or 'N/A'}", ln=True)
+        pdf.ln(3)
+
+    pdf.ln(5)
+    pdf.cell(200, 10, txt="My Training Plans:", ln=True, align="L")
+    pdf.ln(5)
+    for plan in training_plans:
+        pdf.cell(200, 10, txt=f"Day: {plan.day_of_week}", ln=True)
+        pdf.cell(200, 10, txt=f"  - Time: {plan.start_time} - {plan.end_time}", ln=True)
+        pdf.cell(200, 10, txt=f"  - Category: {plan.category}", ln=True)
+        pdf.cell(200, 10, txt=f"  - Exercise: {plan.exercise}", ln=True)
+        pdf.cell(200, 10, txt=f"  - Sets: {plan.sets}, Reps: {plan.reps}", ln=True)
+        pdf.cell(200, 10, txt=f"  - Notes: {plan.notes or 'N/A'}", ln=True)
+        pdf.ln(3)
+
+    filename = f"report_{user.username}_{datetime.now().strftime('%Y%m%d%H%M%S')}.pdf"
+    pdf.output(f"static/reports/{filename}")
+
+    return send_file(f"static/reports/{filename}", as_attachment=True)
 
 @app.route('/profile/journal', methods=['GET'])
 @login_required
