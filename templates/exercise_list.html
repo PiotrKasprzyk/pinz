@@ -32,17 +32,20 @@
 <!-- Kafelki ćwiczeń -->
 <div class="exercise-cards">
     {% for exercise in exercises %}
-    <div class="exercise-card">
+    <div class="card bg-base-100 image-full w-96 shadow-xl">
         {% if exercise.image %}
+        <figure>
 <img src="{{ url_for('static', filename=exercise.image.split('static/')[-1]) }}" alt="{{ exercise.name }}" class="exercise-image">
+</figure>
 {% else %}
 <img src="{{ url_for('static', filename='images/placeholder.jpg') }}" alt="No Image Available" class="exercise-image">
 {% endif %}
-
+<div class="card-body">
         <h2>{{ exercise.name }}</h2>
         <p><strong>Body Part:</strong> {{ exercise.body_part }}</p>
         <p><strong>Difficulty:</strong> {{ exercise.difficulty }}</p>
         <p>{{ exercise.description or 'No description available' }}</p>
+</div>
     </div>
     {% endfor %}
 </div>

@@ -21,8 +21,12 @@
 <!-- Formularz dodawania opinii -->
 {% if current_user.is_authenticated %}
 <h3>Leave Your Review</h3>
+<form method="POST" action="/opinions">    
+    <textarea name="content" rows="3" class="textarea textarea-primary" placeholder="Write your opinion here..." required></textarea>  
+    <button type="submit">Submit</button>
+</form>
+<h3>Ocena(1-5):</h3>
 <form method="POST" action="/opinions">
-    <textarea name="content" rows="3" placeholder="Write your opinion here..." required></textarea>
     <div class="rating">
         <input type="radio" id="star5" name="rating" value="5" required>
         <label for="star5" title="5 stars">★</label>
@@ -35,9 +39,8 @@
         <input type="radio" id="star1" name="rating" value="1">
         <label for="star1" title="1 star">★</label>
     </div>
-    <button type="submit">Submit</button>
-</form>
-
+    </form>
+    
 {% else %}
 <p>You need to <a href="/login">log in</a> to leave a review.</p>
 {% endif %}

@@ -10,20 +10,23 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
 </head>
-<body>
-    <div class="navbar bg-base-100">
-        <button class="btn btn-outline"><a  href="/">Strona główna</a></button>
-        <button class="btn btn-outline"><a href="/forum">Forum</a></button>
-        <button class="btn btn-outline"><a href="/products">Produkty spożywcze</a></button>
-        <button class="btn btn-outline"><a href="/diets">Dieta</a></button>
-        <button class="btn btn-outline"><a href="/exercises">Ćwiczenia Fizyczne</a></button>
-        <button class="btn btn-outline"><a href="/plan">Plan Treningowy</a></button>
-        <button class="btn btn-outline"><a href="/bmi">Kalkulator BMI</a></button>
-        <button class="btn btn-outline"><a href="/opinions">Opinie</a></button>
-        <button class="btn btn-outline"><a href="/profile">Mój profil</a></button>
-        <button class="btn btn-outline"><a href="/logout">Wyloguj</a></button>
-        <input type="checkbox" value="synthwave" class="toggle theme-controller" />
-    </div>
+    
+    <body data-theme="synthwave">
+    
+    <div class="navbar bg-neutral text-neutral-content" data-theme="synthwave"> 
+        <img src="/static/images/logo.webp" alt="logo" class="logo">
+        <button class="btn btn-ghost text-xl"><a href="/">Strona główna</a></button>
+        <button class="btn btn-ghost text-xl"><a href="/forum">Forum</a></button>
+        <button class="btn btn-ghost text-xl"><a href="/products">Produkty spożywcze</a></button>
+        <button class="btn btn-ghost text-xl"><a href="/diets">Dieta</a></button>
+        <button class="btn btn-ghost text-xl"><a href="/exercises">Ćwiczenia Fizyczne</a></button>
+        <button class="btn btn-ghost text-xl"><a href="/plan">Plan Treningowy</a></button>
+        <button class="btn btn-ghost text-xl"><a href="/bmi">Kalkulator BMI</a></button>
+        <button class="btn btn-ghost text-xl"><a href="/opinions">Opinie</a></button>
+        <button class="btn btn-ghost text-xl"><a href="/profile">Mój profil</a></button>
+        <button class="btn btn-ghost text-xl"><a href="/logout">Wyloguj</a></button>
+        
+      </div>
     
     <main>
         {% block content %}{% endblock %}

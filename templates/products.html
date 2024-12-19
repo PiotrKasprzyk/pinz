@@ -55,14 +55,17 @@
 <hr>
 
 <!-- Kafelki produktów -->
-<div class="product-cards">
+<div class="product-cards" >
     {% for product in products %}
-    <div class="product-card">
+    <div class="card bg-base-100 image-full w-96 shadow-xl" >
         {% if product.image %}
         <img src="{{ url_for('static', filename=product.image.split('static/')[-1]) }}" alt="{{ product.name }}" class="product-image">
         {% else %}
-        <img src="/static/images/placeholder.jpg" alt="No Image Available" class="product-image">
+        <figure>
+        <img src="/static/images/placeholder.jpg" alt="No Image Available">
+        </figure>
         {% endif %}
+        <div class="card-body">
         <h2>{{ product.name }}</h2>
         <p><strong>Category:</strong> {{ product.category }}</p>
         <p><strong>Proteins:</strong> {{ product.proteins }}g</p>
@@ -70,6 +73,7 @@
         <p><strong>Fats:</strong> {{ product.fats }}g (saturated: {{ product.saturated_fats }}g)</p>
         <p><strong>Salt:</strong> {{ product.salt }}g</p>
         <p><strong>Health Score:</strong> {{ product.health_score }}</p>
+    </div>
     </div>
     {% endfor %}
 </div>

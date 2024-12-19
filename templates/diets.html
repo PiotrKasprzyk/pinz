@@ -5,18 +5,22 @@
 {% block content %}
 <h1>Proposed Diets</h1>
 
-<div class="diets-container">
+<div class="exercise-cards">
     {% for diet in diets %}
-    <div class="diet-card">
-        <h2>{{ diet.name }}</h2>
+    <div class="card glass w-96">
+      <div class="card-body">
+        <h2 class="card-title">{{ diet.name }}</h2>
         <p><strong>Wiek:</strong> {{ diet.wiek }}</p>
         <p><strong>Gender:</strong> {{ diet.gender }}</p>
         <p><strong>Activity Level:</strong> {{ diet.activity_level }}</p>
         <p><strong>Preferences:</strong> {{ diet.preferences or 'None' }}</p>
         <p><strong>Exclusions:</strong> {{ diet.exclusions or 'None' }}</p>
         <p><strong>Other:</strong> {{ diet.other_details or 'None' }}</p>
-        <a href="/diets/{{ diet.id }}" class="view-meal-plan">View Meal Plan</a>
+        <a href="/diets/{{ diet.id }}" class="btn btn-primary">View Meal Plan</a>
+      </div>
     </div>
+    
+  
     {% endfor %}
 </div>
 {% endblock %}
