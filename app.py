@@ -18,7 +18,11 @@ login_manager.login_view = 'login'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
-UPLOAD_FOLDER = 'static/uploads'
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'uploads')
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 with app.app_context():
     db.create_all()
@@ -374,7 +378,7 @@ def add_comment(post_id):
         filename = secure_filename(image_file.filename)
         image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         image_file.save(image_path)
-        image_path = image_path.replace("\\", "/")
+        image_path = os.path.join('uploads', filename)
 
     new_comment = Comment(
         post_id=post_id,

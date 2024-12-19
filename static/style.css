@@ -34,12 +34,13 @@ footer {
 .welcome {
     text-align: center;
     padding: 40px 20px;
-    background-color: #f9f9f9;
+    
 }
 
 .welcome h1 {
     font-size: 2.5rem;
     margin-bottom: 10px;
+    color: #d2cece;
 }
 
 .welcome p {
@@ -47,33 +48,19 @@ footer {
     margin-top: 10px;
 }
 
-/* Stylizacja sekcji powitalnej */
-.welcome {
-    text-align: center;
-    padding: 40px 20px;
-    background-color: #f9f9f9;
-}
 
-.welcome h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-}
-
-.welcome p {
-    font-size: 1.2rem;
-    margin-top: 10px;
-}
 
 /* Stylizacja sekcji "What We Offer" */
 .features {
     text-align: center;
     padding: 40px 20px;
-    background-color: #fff;
+    color: #d2cece;
 }
 
 .features h2 {
     font-size: 2rem;
     margin-bottom: 20px;
+    color: #d2cece;
 }
 
 .feature-list {
@@ -116,18 +103,20 @@ footer {
 .cta {
     text-align: center;
     padding: 40px 20px;
-    background-color: #007bff;
-    color: white;
+    
+    color: #d2cece;
 }
 
 .cta h2 {
     font-size: 2rem;
     margin-bottom: 10px;
+    color: #d2cece;
 }
 
 .cta p {
     font-size: 1.2rem;
     margin-bottom: 20px;
+    color: #d2cece;
 }
 
 .cta-button {
@@ -149,7 +138,7 @@ form {
 }
 
 .post {
-    border: 1px solid #ddd;
+    border: 1px solid #d71212;
     padding: 15px;
     border-radius: 10px;
     margin-bottom: 20px;
