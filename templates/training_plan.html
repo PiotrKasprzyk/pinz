@@ -7,9 +7,10 @@
 
 <a href="{{ url_for('add_training_plan') }}" class="btn btn-primary">Add New Training Plan</a>
 
-<div class="training-plans">
+<div class="exercise-cards">
     {% for plan in grouped_plans %}
-    <div class="training-card">
+    <div class="card glass w-96">
+        <div class="card-body">
         <h3><strong>{{ plan.day_of_week }}</strong></h3>
         <p><strong>Time:</strong> {{ plan.start_time }} - {{ plan.end_time }}</p>
         
@@ -30,6 +31,7 @@
         </form>
         <a href="{{ url_for('edit_training_plan', plan_id=plan.id) }}" class="btn btn-primary">Edit</a>
     </div>
+    </div>
     {% endfor %}
 </div>
 
@@ -46,7 +48,7 @@
         padding: 15px;
         box-shadow: 2px 2px 12px #ddd;
         width: 45%;
-        background-color: #f9f9f9;
+        background-color:rgb(255, 0, 0);
     }
 
     .training-card h3 {

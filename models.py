@@ -199,6 +199,7 @@ class Achievement(db.Model):
     achieved_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     icon = db.Column(db.String(300), nullable=True)  # Ścieżka do ikony odznaki
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    
     user = db.relationship('User', backref='achievements')
 
 

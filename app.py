@@ -1180,7 +1180,7 @@ def achievements():
     if category:  # Filtrowanie po kategorii
         query = query.filter_by(category=category)
 
-    #user_achievements = query.all()
+    user_achievements = query.all()
     categories = Achievement.query.with_entities(Achievement.category).distinct().all()
     categories = [c[0] for c in categories]  # Lista unikalnych kategorii
     test_achievements = [
