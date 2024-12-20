@@ -1174,23 +1174,44 @@ def edit_training_plan(plan_id):
 @app.route('/profile/achievements')
 @login_required
 def achievements():
-    category = request.args.get('category')  
+    category = request.args.get('category')  # Pobierz kategorię z parametru GET
     query = Achievement.query.filter_by(user_id=current_user.id)
     
-    if category:  
+    if category:  # Filtrowanie po kategorii
         query = query.filter_by(category=category)
 
-    user_achievements = query.all()
+    #user_achievements = query.all()
     categories = Achievement.query.with_entities(Achievement.category).distinct().all()
-    categories = [c[0] for c in categories] 
-    print("Achievements:", user_achievements)
-    print("Categories:", categories)
+    categories = [c[0] for c in categories]  # Lista unikalnych kategorii
+    test_achievements = [
+        {
+            'title': 'Profile Complete',
+            'description': 'You completed your profile!',
+            'category': 'Profile',
+            'icon': 'icons/profile_complete.png',
+            'created_at': datetime.utcnow()
+        },
+        {
+            'title': 'First Journal Entry',
+            'description': 'You added your first journal entry!',
+            'category': 'Journal',
+            'icon': 'icons/first_journal.png',
+            'created_at': datetime.utcnow()
+        }
+    ]
     return render_template(
         'achievements.html', 
-        achievements=user_achievements, 
+        achievements=test_achievements, 
         categories=categories, 
         selected_category=category
     )
+def add_test_achievements():
+    achievements = [
+        Achievement(user_id=current_user.id, title="Test Achievement 1", description="Description 1", category="Profile", icon="icons/test1.png"),
+        Achievement(user_id=current_user.id, title="Test Achievement 2", description="Description 2", category="Journal", icon="icons/test2.png"),
+    ]
+    db.session.bulk_save_objects(achievements)
+    db.session.commit()
 
 def get_user_achievements(user_id):
     """ Pobiera osiągnięcia użytkownika. """
