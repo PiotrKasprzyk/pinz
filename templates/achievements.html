@@ -21,6 +21,7 @@
 <!-- Lista osiągnięć -->
 <div class="achievements-container">
     {% for achievement in achievements %}
+    <pre>{{ achievement.__dict__ }}</pre>
     <div class="achievement-card">
         <img src="{{ url_for('static', filename=achievement.icon) }}" alt="{{ achievement.title }}" class="achievement-icon">
         <h3 class="achievement-title">{{ achievement.title }}</h3>
@@ -28,6 +29,7 @@
         <p class="achievement-category">Category: {{ achievement.category }}</p>
         <p class="achievement-date">Achieved on: {{ achievement.created_at.strftime('%Y-%m-%d') }}</p>
     </div>
+   
     {% else %}
     <p>No achievements found for this category.</p>
     {% endfor %}

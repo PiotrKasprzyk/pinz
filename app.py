@@ -9,6 +9,7 @@ from flask import jsonify
 import json
 from itsdangerous import URLSafeTimedSerializer
 import resend
+from flask_migrate import Migrate   
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  
@@ -1182,7 +1183,8 @@ def achievements():
     user_achievements = query.all()
     categories = Achievement.query.with_entities(Achievement.category).distinct().all()
     categories = [c[0] for c in categories] 
-    
+    print("Achievements:", user_achievements)
+    print("Categories:", categories)
     return render_template(
         'achievements.html', 
         achievements=user_achievements, 
@@ -1222,7 +1224,10 @@ def update_profile():
                 category="Profile",
                 icon="icons/profile_complete.png"
             )
+    print("Profile updated successfully!")
 
+    # Sprawdzanie osiągnięć
+    check_and_award_achievements(user)
     db.session.commit()
     flash("Profile updated successfully!", "success")
     return redirect(url_for('profile_details'))
@@ -1336,7 +1341,7 @@ def add_achievement(user_id, title, description, category, icon):
         icon=icon
     )
     db.session.add(achievement)
-    db.session.commit()
+    db.session.commit()        
 from flask import render_template, request, redirect, url_for, flash, send_file
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -1981,4 +1986,4 @@ app.run(debug=True)
 #skoczyc podstrony w profilu
 #dodac zdjecia do produktow
 #dodac zdjecia do cwiczen
-#poprawic style
+#poprawic style debug=true

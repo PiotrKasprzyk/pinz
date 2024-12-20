@@ -150,8 +150,7 @@ class JournalEntry(db.Model):
 class Recipe(db.Model):
     __tablename__ = 'recipe'
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.Text, nullable=False)
-    
+    content = db.Column(db.Text, nullable=False, default="Default content")
     breakfast_id = db.Column(db.Integer, db.ForeignKey('diets.id'), nullable=True)
     second_breakfast_id = db.Column(db.Integer, db.ForeignKey('diets.id'), nullable=True)
     lunch_id = db.Column(db.Integer, db.ForeignKey('diets.id'), nullable=True)
