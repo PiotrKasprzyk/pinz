@@ -11,6 +11,7 @@
     {% for plan in grouped_plans %}
     <div class="card glass w-96">
         <div class="card-body">
+<<<<<<< HEAD
             {% set days_translation = {
                 "Monday": "Poniedziałek",
                 "Tuesday": "Wtorek",
@@ -24,6 +25,10 @@
             <h3>{{ days_translation[plan.day_of_week] }}</h3>
         <p><strong>Czas:</strong> {{ plan.start_time }} - {{ plan.end_time }}</p>
         
+=======
+        <h3><strong>{{ plan.day_of_week }}</strong></h3>
+        <p><strong>Time:</strong> {{ plan.start_time }} - {{ plan.end_time }}</p>
+>>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
         
         <ul>
             {% for exercise in plan.exercises %}
@@ -40,6 +45,7 @@
             <button type="submit" class="btn btn-danger">Usuń</button>
         </form>
         <a href="{{ url_for('edit_training_plan', plan_id=plan.id) }}" class="btn btn-primary">Edytuj</a>
+    </div>
     </div>
     </div>
     {% endfor %}

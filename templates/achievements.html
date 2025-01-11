@@ -27,8 +27,13 @@
         <img src="{{ url_for('static', filename=achievement.icon) }}" alt="{{ achievement.title }}" class="achievement-icon">
         <h3 class="achievement-title">{{ achievement.title }}</h3>
         <p class="achievement-description">{{ achievement.description }}</p>
+<<<<<<< HEAD
         <p class="achievement-category">Kategoria: {{ achievement.category }}</p>
         <p class="achievement-date">Otrzymana za: {{ achievement.created_at }}</p>
+=======
+        <p class="achievement-category">Category: {{ achievement.category }}</p>
+        <p class="achievement-date">Achieved on: {{ achievement.created_at }}</p>
+>>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
     </div>
    </div>
     {% else %}

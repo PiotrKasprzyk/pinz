@@ -7,12 +7,17 @@
 
 <!-- Formularz filtrowania -->
 <form method="GET" action="/forum" class="forum-filter-form">
+<<<<<<< HEAD
     <label for="author" class="forum-filter-label">Autor:</label>
+=======
+    <label for="author" class="forum-filter-label">Author:</label>
+>>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
     <input type="text" name="author" id="author" value="{{ request.args.get('author', '') }}" class="forum-filter-input">
 
     <label for="tag" class="forum-filter-label">Tag:</label>
     <input type="text" name="tag" id="tag" value="{{ request.args.get('tag', '') }}" class="forum-filter-input">
 
+<<<<<<< HEAD
     <label for="sort_by" class="forum-filter-label">Sortuj:</label>
     <select name="sort_by" id="sort_by" class="forum-filter-select">
         <option value="created_at" {% if request.args.get('sort_by') == 'created_at' %}selected{% endif %}>Najnowsze</option>
@@ -20,18 +25,36 @@
     </select>
 
     <button type="submit" class="forum-filter-button">Filtr</button>
+=======
+    <label for="sort_by" class="forum-filter-label">Sort By:</label>
+    <select name="sort_by" id="sort_by" class="forum-filter-select">
+        <option value="created_at" {% if request.args.get('sort_by') == 'created_at' %}selected{% endif %}>Newest</option>
+        <option value="likes" {% if request.args.get('sort_by') == 'likes' %}selected{% endif %}>Most Liked</option>
+    </select>
+
+    <button type="submit" class="forum-filter-button">Filter</button>
+>>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
     <a href="/forum" class="forum-reset-button">Reset</a>
 </form>
 
 <!-- Formularz tworzenia nowego posta -->
 {% if current_user.is_authenticated %}
 <form method="POST" enctype="multipart/form-data" class="forum-new-post-form">
+<<<<<<< HEAD
     <input type="text" name="title" placeholder="Tytuł posta" required class="forum-post-input">
     <textarea name="content" placeholder="Treść posta..." rows="4" required class="forum-post-textarea"></textarea>
     <input type="text" name="tags" placeholder="Tagi" class="forum-post-input">
     <label for="image" class="forum-post-label">Prześlij obraz:</label>
     <input type="file" name="image" id="image" accept="image/*" class="file-input file-input-bordered w-full max-w-xs" />
     <button type="submit" class="forum-post-button">Stwórz post</button>
+=======
+    <input type="text" name="title" placeholder="Post title" required class="forum-post-input">
+    <textarea name="content" placeholder="Write your post..." rows="4" required class="forum-post-textarea"></textarea>
+    <input type="text" name="tags" placeholder="Tags (comma-separated)" class="forum-post-input">
+    <label for="image" class="forum-post-label">Upload an image:</label>
+    <input type="file" name="image" id="image" accept="image/*" class="file-input file-input-bordered w-full max-w-xs" />
+    <button type="submit" class="forum-post-button">Create Post</button>
+>>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
 </form>
 {% else %}
 <p>You need to <a href="/login">Zaloguj się</a> aby stówrzyć post</p>
@@ -64,16 +87,27 @@
             <button class="unlike-button" data-post-id="{{ post.id }}">
                 <img src="{{ url_for('static', filename='icons/unlike.png') }}" alt="Unlike" width="20">
             </button>
+<<<<<<< HEAD
             <span id="post-likes-count-{{ post.id }}">Polubienia: {{ post.likes_count }}</span>
             <span id="post-unlikes-count-{{ post.id }}">To mi się nie podoba: {{ post.unlikes_count }}</span>
+=======
+            <span id="post-likes-count-{{ post.id }}">Likes: {{ post.likes_count }}</span>
+            <span id="post-unlikes-count-{{ post.id }}">Unlikes: {{ post.unlikes_count }}</span>
+>>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
         </div>
 
          <!-- Edycja i usuwanie tylko dla autora -->
          {% if post.user_id == current_user.id %}
          <div class="forum-post-actions">
+<<<<<<< HEAD
              <a href="{{ url_for('edit_post', post_id=post.id) }}" class="forum-btn-edit">Edytuj</a>
              <form method="POST" action="{{ url_for('delete_post', post_id=post.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this post?');">
                  <button type="submit" class="forum-btn-delete">Usuń</button>
+=======
+             <a href="{{ url_for('edit_post', post_id=post.id) }}" class="forum-btn-edit">Edit</a>
+             <form method="POST" action="{{ url_for('delete_post', post_id=post.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                 <button type="submit" class="forum-btn-delete">Delete</button>
+>>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
              </form>
          </div>
          {% endif %}
@@ -81,11 +115,19 @@
 
         <!-- Komentarze -->
         <div class="comments-section">
+<<<<<<< HEAD
             <h3>Komentarze:</h3>
             <form method="POST" action="/comment/{{ post.id }}" enctype="multipart/form-data">
                 <textarea name="content" placeholder="Write a comment..." required></textarea>
                 <input type="file" name="image" accept="image/*">
                 <button type="submit" class="btn-comment">Komentarz</button>
+=======
+            <h3>Comments:</h3>
+            <form method="POST" action="/comment/{{ post.id }}" enctype="multipart/form-data">
+                <textarea name="content" placeholder="Write a comment..." required></textarea>
+                <input type="file" name="image" accept="image/*">
+                <button type="submit" class="btn-comment">Comment</button>
+>>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
             </form>
             <button class="toggle-comments-btn" data-post-id="{{ post.id }}">▼ Comments</button>
             <ul class="comments-list" id="comments-list-{{ post.id }}" style="display: none;">
@@ -111,7 +153,11 @@
                     <form method="POST" action="/comment/reply/{{ comment.id }}" enctype="multipart/form-data">
                         <textarea name="content" placeholder="Write a reply..." required></textarea>
                         <input type="file" name="image" accept="image/*">
+<<<<<<< HEAD
                         <button type="submit" class="btn-reply">odpowiedz</button>
+=======
+                        <button type="submit" class="btn-reply">Reply</button>
+>>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
                     </form>
                 </li>
                 {% endfor %}

@@ -13,6 +13,7 @@
     <div class="card glass w-96">
         <div class="card-body">
             
+<<<<<<< HEAD
             {% set days_translation = {
                 "Monday": "Poniedziałek",
                 "Tuesday": "Wtorek",
@@ -25,6 +26,10 @@
             
             <h3>{{ days_translation[diet.day_of_week] }}</h3>
         <p><strong>Śniadanie:</strong> {{ diet.breakfast }}</p>
+=======
+        <h3>{{ diet.day_of_week }}</h3>
+        <p><strong>Breakfast:</strong> {{ diet.breakfast }}</p>
+>>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
         <details>
             <summary>Przepis</summary>
             <p>{{ diet.breakfast_recipe[0].details if diet.breakfast_recipe }}</p>

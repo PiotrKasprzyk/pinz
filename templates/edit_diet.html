@@ -6,6 +6,7 @@
 <h1>Edit Diet</h1>
 
 <form method="POST" enctype="multipart/form-data">
+<<<<<<< HEAD
         <label for="day_of_week">Dzień tygodnia:</label>
         <select name="day_of_week" id="day_of_week" required>
             <option value="Monday">Poniedziałek</option>
@@ -17,6 +18,19 @@
             <option value="Sunday">Niedziela</option>
         </select>
     <label for="breakfast">Śniadanie:</label>
+=======
+    <label for="day_of_week">Day of Week:</label>
+    <select name="day_of_week" id="day_of_week" required>
+        <option value="Monday">Monday</option>
+        <option value="Tuesday">Tuesday</option>
+        <option value="Wednesday">Wednesday</option>
+        <option value="Thursday">Thursday</option>
+        <option value="Friday">Friday</option>
+        <option value="Saturday">Saturday</option>
+        <option value="Sunday">Sunday</option>
+    </select>
+    <label for="breakfast">Breakfast:</label>
+>>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
     <input type="text" id="breakfast" name="breakfast" value="{{ diet.breakfast }}" required>
 
     <label for="breakfast_recipe">Przepis:</label>
