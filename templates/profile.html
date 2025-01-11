@@ -5,30 +5,82 @@
 {% block content %}
 <h1>My Profile</h1>
 
-<div class="profile-grid">
-    <a href="/profile/details" class="profile-card">
-        <h2>Personal Details</h2>
-        <img src="{{ url_for('static', filename='icons/profile_details.webp') }}" alt="Personal Details">
-    </a>
-    <a href="/profile/diets" class="profile-card">
-        <h2>My Diets</h2>
-        <img src="{{ url_for('static', filename='icons/my_diets.webp') }}" alt="My Diets">
-    </a>
-    <a href="/profile/training-plan" class="profile-card">
-        <h2>My Training Plan</h2>
-        <img src="{{ url_for('static', filename='icons/training_plan.webp') }}" alt="My Training Plan">
-    </a>
-    <a href="/profile/achievements" class="profile-card">
-        <h2>Achievements</h2>
-        <img src="{{ url_for('static', filename='icons/achievements.webp') }}" alt="Achievements">
-    </a>
-    <a href="/profile/settings" class="profile-card">
-        <h2>Settings</h2>
-        <img src="{{ url_for('static', filename='icons/settings.webp') }}" alt="Settings">
-    </a>
-    <a href="/profile/journal" class="profile-card">
-        <h3>My Journal</h3>
-        <img src="{{ url_for('static', filename='icons/journal.webp') }}" alt="journal">
-    </a>
+<div class="product-cards">
+    
+    <div class="card bg-base-100 image-full w-96 shadow-xl">
+        <figure>
+          <img
+          src="{{ url_for('static', filename='icons/profile_details.webp') }}" alt="Personal Details" />
+        </figure>
+        <div class="card-body">
+          <h2 class="card-title">Moje dane!</h2>
+          <p>Tu możesz wprowadzić swoje dane osobowe oraz je edytować</p>
+          <div class="card-actions justify-end">
+            <button class="btn btn-primary"><a href="/profile/details">Moje dane</a></button>
+          </div>
+        </div>
+      </div>
+      <div class="card bg-base-100 image-full w-96 shadow-xl">
+        <figure>
+          <img src="{{ url_for('static', filename='icons/my_diets.webp') }}" alt="My Diets" />
+        </figure>
+        <div class="card-body">
+          <h2 class="card-title">Moje Diety!</h2>
+          <p>Tu możesz wprowadzić swoje spersonalizwane diety.Możesz dodawać,usuwać oraz edytować.</p>
+          <div class="card-actions justify-end">
+            <button class="btn btn-primary"><a href="/profile/diets">Moje diety</a></button>
+          </div>
+        </div>
+      </div>
+      <div class="card bg-base-100 image-full w-96 shadow-xl">
+        <figure>
+          <img src="{{ url_for('static', filename='icons/training_plan.webp') }}" alt="My Training Plan" />
+        </figure>
+        <div class="card-body">
+          <h2 class="card-title">Moje Plany treningowe!!</h2>
+          <p>Tu możesz wprowadzić swoje spersonalizwane plany treningowe.Możesz dodawać,usuwać oraz edytować.</p>
+          <div class="card-actions justify-end">
+            <button class="btn btn-primary"><a href="/profile/training-plan">Moje plany treningowe</a></button>
+          </div>
+        </div>
+      </div>  
+      <div class="card bg-base-100 image-full w-96 shadow-xl">
+        <figure>
+          <img src="{{ url_for('static', filename='icons/achievements.webp') }}" alt="My Training Plan" />
+        </figure>
+        <div class="card-body">
+          <h2 class="card-title">Moje osiągnięcia!</h2>
+          <p>Tu możesz swoje osiągnięcia.</p>
+          <div class="card-actions justify-end">
+            <button class="btn btn-primary"><a href="/profile/achievements">Moje osiągnięcia</a></button>
+          </div>
+        </div>
+      </div>  
+      <div class="card bg-base-100 image-full w-96 shadow-xl">
+        <figure>
+          <img src="{{ url_for('static', filename='icons/settings.webp') }}" alt="Settings" />
+        </figure>
+        <div class="card-body">
+          <h2 class="card-title">Ustawienia!</h2>
+          <p>Tu możesz zmienić hasło oraz email.Również możesz wygenerować swój raport z diety i planu treningu.</p>
+          <div class="card-actions justify-end">
+            <button class="btn btn-primary"><a href="/profile/settings">Ustawienia</a></button>
+          </div>
+        </div>
+      </div> 
+      <div class="card bg-base-100 image-full w-96 shadow-xl">
+        <figure>
+          <img src="{{ url_for('static', filename='icons/journal.webp') }}" alt="Journal" />
+        </figure>
+        <div class="card-body">
+          <h2 class="card-title">Mój dziennik aktywności!</h2>
+          <p>Tu możesz prowadzić dziennik związany z twoja aktywności fizyczną oraz dietą.</p>
+          <div class="card-actions justify-end">
+            <button class="btn btn-primary"><a href="/profile/journal">Dziennik</a></button>
+          </div>
+        </div>
+      </div>
+    
+    
 </div>
 {% endblock %}

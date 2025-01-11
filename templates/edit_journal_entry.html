@@ -6,47 +6,47 @@
 <h1>Edit Journal Entry</h1>
 
 <form method="POST" action="{{ url_for('edit_journal_entry', entry_id=entry.id) }}">
-    <label for="date">Date:</label>
+    <label for="date">Data:</label>
     <input type="date" name="date" id="date" value="{{ entry.date }}" required>
 
-    <label for="day_of_week">Day of the Week:</label>
+    <label for="day_of_week">Dzień tygodnia:</label>
     <input type="text" name="day_of_week" id="day_of_week" value="{{ entry.day_of_week }}" required>
 
-    <h3>Meals</h3>
-    <label for="breakfast">Breakfast:</label>
+    <h3>Posiłki</h3>
+    <label for="breakfast">Śniadanie:</label>
     <textarea name="breakfast" id="breakfast">{{ entry.breakfast }}</textarea>
 
-    <label for="second_breakfast">Second Breakfast:</label>
+    <label for="second_breakfast">Drugie śniadanie:</label>
     <textarea name="second_breakfast" id="second_breakfast">{{ entry.second_breakfast }}</textarea>
 
-    <label for="lunch">Lunch:</label>
+    <label for="lunch">Obiad:</label>
     <textarea name="lunch" id="lunch">{{ entry.lunch }}</textarea>
 
-    <label for="dinner">Dinner:</label>
+    <label for="dinner">Kolacja:</label>
     <textarea name="dinner" id="dinner">{{ entry.dinner }}</textarea>
 
-    <label for="snack">Snack:</label>
+    <label for="snack">Podwieczorek:</label>
     <textarea name="snack" id="snack">{{ entry.snack }}</textarea>
 
-    <h3>Workout</h3>
+    <h3>Trening</h3>
     <div id="workouts">
         {% for workout in entry.workout_details %}
         <div class="workout">
-            <label>Workout Type:</label>
+            <label>Typ treningu(ćwiczenie):</label>
             <input type="text" name="workout_type" value="{{ workout.type }}" required>
-            <label>Reps:</label>
+            <label>Powtórzenia:</label>
             <input type="text" name="workout_reps" value="{{ workout.reps }}">
-            <label>Notes:</label>
+            <label>Notatki:</label>
             <textarea name="workout_notes">{{ workout.notes }}</textarea>
         </div>
         {% endfor %}
     </div>
-    <button type="button" onclick="addWorkout()">Add Workout</button>
+    <button type="button" onclick="addWorkout()">Dodaj ćwiczenie</button>
 
-    <label for="conclusions">Conclusions:</label>
+    <label for="conclusions">Wnioski:</label>
     <textarea name="conclusions" id="conclusions">{{ entry.conclusions }}</textarea>
 
-    <button type="submit">Save Changes</button>
+    <button type="submit">Zapisz zmiany</button>
 </form>
 
 <script>

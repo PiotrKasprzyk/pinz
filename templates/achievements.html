@@ -7,9 +7,9 @@
 
 <!-- Filtr kategorii -->
 <form method="GET" action="{{ url_for('achievements') }}" class="filter-form">
-    <label for="category">Filter by Category:</label>
+    <label for="category">Filtracja po kategorii:</label>
     <select name="category" id="category" onchange="this.form.submit()">
-        <option value="" {% if not selected_category %}selected{% endif %}>All Categories</option>
+        <option value="" {% if not selected_category %}selected{% endif %}>Wszystkie kategorie</option>
         {% for category in categories %}
         <option value="{{ category }}" {% if selected_category == category %}selected{% endif %}>
             {{ category }}
@@ -21,15 +21,18 @@
 <!-- Lista osiągnięć -->
 <div class="achievements-container">
     {% for achievement in achievements %}
-    <div class="achievement-card">
+    <pre>{{ achievement.__dict__ }}</pre>
+    <div class="card glass w-96">
+        <div class="card-body">
         <img src="{{ url_for('static', filename=achievement.icon) }}" alt="{{ achievement.title }}" class="achievement-icon">
         <h3 class="achievement-title">{{ achievement.title }}</h3>
         <p class="achievement-description">{{ achievement.description }}</p>
-        <p class="achievement-category">Category: {{ achievement.category }}</p>
-        <p class="achievement-date">Achieved on: {{ achievement.created_at.strftime('%Y-%m-%d') }}</p>
+        <p class="achievement-category">Kategoria: {{ achievement.category }}</p>
+        <p class="achievement-date">Otrzymana za: {{ achievement.created_at }}</p>
     </div>
+   </div>
     {% else %}
-    <p>No achievements found for this category.</p>
+    <p>Nie masz jeszcze żadnych osiągnięć.</p>
     {% endfor %}
 </div>
 {% endblock %}

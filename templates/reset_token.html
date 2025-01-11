@@ -1,6 +1,12 @@
-<h1>Set New Password</h1>
+{% extends 'base.html' %}
+
+{% block title %}Restowanie hasła{% endblock %}
+
+{% block content %}
+<h1>Ustaw nowe hasło</h1>
 <form method="POST">
-    <label for="password">New Password:</label>
+    <label for="password">Nowe hasło:</label>
     <input type="password" name="password" required>
-    <button type="submit">Reset Password</button>
+    <button type="submit" class="btn btn-primary">Resetuj hasło</button>
 </form>
+{% endblock %}

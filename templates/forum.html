@@ -6,276 +6,121 @@
 <h1>Forum</h1>
 
 <!-- Formularz filtrowania -->
-<form method="GET" action="/forum" class="filter-form">
-    <div class="filter-row">
-        <label for="author">Author:</label>
-        <input type="text" name="author" id="author" value="{{ request.args.get('author', '') }}">
+<form method="GET" action="/forum" class="forum-filter-form">
+    <label for="author" class="forum-filter-label">Autor:</label>
+    <input type="text" name="author" id="author" value="{{ request.args.get('author', '') }}" class="forum-filter-input">
 
-        <label for="tag">Tag:</label>
-        <input type="text" name="tag" id="tag" value="{{ request.args.get('tag', '') }}">
+    <label for="tag" class="forum-filter-label">Tag:</label>
+    <input type="text" name="tag" id="tag" value="{{ request.args.get('tag', '') }}" class="forum-filter-input">
 
-        <label for="sort_by">Sort By:</label>
-        <select name="sort_by" id="sort_by">
-            <option value="created_at" {% if request.args.get('sort_by') == 'created_at' %}selected{% endif %}>Newest</option>
-            <option value="likes" {% if request.args.get('sort_by') == 'likes' %}selected{% endif %}>Most Liked</option>
-        </select>
-    </div>
-    <div class="filter-row">
-        <button type="submit">Filter</button>
-        <a href="/forum" class="reset-button">Reset</a>
-    </div>
+    <label for="sort_by" class="forum-filter-label">Sortuj:</label>
+    <select name="sort_by" id="sort_by" class="forum-filter-select">
+        <option value="created_at" {% if request.args.get('sort_by') == 'created_at' %}selected{% endif %}>Najnowsze</option>
+        <option value="likes" {% if request.args.get('sort_by') == 'likes' %}selected{% endif %}>Najbardziej lubiane</option>
+    </select>
+
+    <button type="submit" class="forum-filter-button">Filtr</button>
+    <a href="/forum" class="forum-reset-button">Reset</a>
 </form>
 
 <!-- Formularz tworzenia nowego posta -->
 {% if current_user.is_authenticated %}
-<form method="POST" enctype="multipart/form-data" class="new-post-form">
-    <input type="text" name="title" placeholder="Post title" required>
-    <textarea name="content" placeholder="Write your post..." rows="4" required></textarea>
-    <input type="text" name="tags" placeholder="Tags (comma-separated)">
-    <label for="image">Upload an image:</label>
-    <input type="file" name="image" id="image" accept="image/*">
-    <button type="submit">Create Post</button>
+<form method="POST" enctype="multipart/form-data" class="forum-new-post-form">
+    <input type="text" name="title" placeholder="Tytuł posta" required class="forum-post-input">
+    <textarea name="content" placeholder="Treść posta..." rows="4" required class="forum-post-textarea"></textarea>
+    <input type="text" name="tags" placeholder="Tagi" class="forum-post-input">
+    <label for="image" class="forum-post-label">Prześlij obraz:</label>
+    <input type="file" name="image" id="image" accept="image/*" class="file-input file-input-bordered w-full max-w-xs" />
+    <button type="submit" class="forum-post-button">Stwórz post</button>
 </form>
 {% else %}
-<p>You need to <a href="/login">log in</a> to create a post.</p>
+<p>You need to <a href="/login">Zaloguj się</a> aby stówrzyć post</p>
 {% endif %}
-
 
 <hr>
 
 <!-- Wyświetlanie postów -->
-<div class="posts">
+<div class="forum-posts">
     {% for post in posts.items %}
-    <div class="post-card">
-        <h2>{{ post.title }}</h2>
+    <div class="forum-post-card">
+        <h2 class="forum-post-title">{{ post.title }}</h2>
         {% if post.image %}
-<img src="{{ url_for('static', filename=post.image) }}" alt="Post Image" class="post-image">
-{% endif %}
+        <img src="{{ url_for('static', filename=post.image) }}" alt="Post Image" class="forum-post-image">
+        {% endif %}
+        <p class="forum-post-content">{{ post.content }}</p>
+        <p class="forum-post-meta"><small>Posted by {{ post.author }} on {{ post.created_at }}</small></p>
+        <p class="forum-post-tags">
+            Tags: 
+            {% for tag in post.tags.split(',') %}
+            <span class="forum-post-tag">{{ tag.strip() }}</span>
+            {% endfor %}
+        </p>
 
-    <p>{{ post.content }}</p>
-    <p><small>Posted by {{ post.author }} on {{ post.created_at }}</small></p>
-    <p>
-        Tags: 
-        {% for tag in post.tags.split(',') %}
-        <span class="tag">{{ tag.strip() }}</span>
-        {% endfor %}
-    </p>
-
-       <!-- Polubienia -->
-<div class="like-section">
-    <!-- Like -->
-    <button class="like-button" data-post-id="{{ post.id }}">
-        <img src="{{ url_for('static', filename='icons/like.png') }}" alt="Like" width="20">
-    </button>
-
-    <!-- Unlike -->
-    <button class="unlike-button" data-post-id="{{ post.id }}">
-        <img src="{{ url_for('static', filename='icons/unlike.png') }}" alt="Unlike" width="20">
-    </button>
-
-    <!-- Liczniki -->
-    <span id="post-likes-count-{{ post.id }}">Likes: {{ post.likes_count }}</span>
-    <span id="post-unlikes-count-{{ post.id }}">Unlikes: {{ post.unlikes_count }}</span>
-</div>
-
-        
-
-<div class="comments-section">
-    <h3>Comments:</h3>
-
-    <!-- Formularz dodawania komentarza -->
-    <form method="POST" action="/comment/{{ post.id }}" enctype="multipart/form-data">
-        <textarea name="content" placeholder="Write a comment..." required></textarea>
-        <input type="file" name="image" accept="image/*">
-        <button type="submit" class="btn-comment">Comment</button>
-    </form>
-
-    <!-- Przycisk zwijania komentarzy -->
-    <button class="toggle-comments-btn" data-post-id="{{ post.id }}">▼ Comments</button>
-
-    <!-- Lista komentarzy -->
-    <ul class="comments-list" id="comments-list-{{ post.id }}">
-        {% for comment in post.comments.filter_by(parent_id=None).all() %}
-        <li>
-            <p>{{ comment.content }}</p>
-            {% if comment.image %}
-            <img src="{{ url_for('static', filename=comment.image) }}" alt="Comment Image" class="comment-image">
-            {% endif %}
-            <p><small>Posted by User {{ comment.user_id }} on {{ comment.created_at }}</small></p>
-
-            <!-- Polubienia -->
-            <button class="like-button" data-comment-id="{{ comment.id }}">
+        <!-- Polubienia -->
+        <div class="like-section">
+            <button class="like-button" data-post-id="{{ post.id }}">
                 <img src="{{ url_for('static', filename='icons/like.png') }}" alt="Like" width="20">
             </button>
-            <button class="unlike-button" data-comment-id="{{ comment.id }}">
+            <button class="unlike-button" data-post-id="{{ post.id }}">
                 <img src="{{ url_for('static', filename='icons/unlike.png') }}" alt="Unlike" width="20">
             </button>
-            <span id="likes-count-{{ comment.id }}">Likes: {{ comment.likes_count }}</span>
-            <span id="unlikes-count-{{ comment.id }}">Unlikes: {{ comment.unlikes_count }}</span>
+            <span id="post-likes-count-{{ post.id }}">Polubienia: {{ post.likes_count }}</span>
+            <span id="post-unlikes-count-{{ post.id }}">To mi się nie podoba: {{ post.unlikes_count }}</span>
+        </div>
 
-            <!-- Odpowiedzi -->
-            <button class="toggle-replies-btn" data-comment-id="{{ comment.id }}">▼ Replies</button>
-            <ul class="replies" id="replies-{{ comment.id }}">
-                {% for reply in comment.replies.all() %}
+         <!-- Edycja i usuwanie tylko dla autora -->
+         {% if post.user_id == current_user.id %}
+         <div class="forum-post-actions">
+             <a href="{{ url_for('edit_post', post_id=post.id) }}" class="forum-btn-edit">Edytuj</a>
+             <form method="POST" action="{{ url_for('delete_post', post_id=post.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                 <button type="submit" class="forum-btn-delete">Usuń</button>
+             </form>
+         </div>
+         {% endif %}
+
+
+        <!-- Komentarze -->
+        <div class="comments-section">
+            <h3>Komentarze:</h3>
+            <form method="POST" action="/comment/{{ post.id }}" enctype="multipart/form-data">
+                <textarea name="content" placeholder="Write a comment..." required></textarea>
+                <input type="file" name="image" accept="image/*">
+                <button type="submit" class="btn-comment">Komentarz</button>
+            </form>
+            <button class="toggle-comments-btn" data-post-id="{{ post.id }}">▼ Comments</button>
+            <ul class="comments-list" id="comments-list-{{ post.id }}" style="display: none;">
+                {% for comment in post.comments.filter_by(parent_id=None).all() %}
                 <li>
-                    <p>{{ reply.content }}</p>
-                    {% if reply.image %}
-                    <img src="{{ url_for('static', filename=reply.image) }}" alt="Reply Image" class="reply-image">
+                    <p>{{ comment.content }}</p>
+                    {% if comment.image %}
+                    <img src="{{ url_for('static', filename=comment.image) }}" alt="Comment Image" class="comment-image">
                     {% endif %}
-                    <p><small>Posted by User {{ reply.user_id }} on {{ reply.created_at }}</small></p>
+                    <p><small>Posted by User {{ comment.user_id }} on {{ comment.created_at }}</small></p>
+                    <button class="toggle-replies-btn" data-comment-id="{{ comment.id }}">▼ Replies</button>
+                    <ul class="replies" id="replies-{{ comment.id }}" style="display: none;">
+                        {% for reply in comment.replies.all() %}
+                        <li>
+                            <p>{{ reply.content }}</p>
+                            {% if reply.image %}
+                            <img src="{{ url_for('static', filename=reply.image) }}" alt="Reply Image" class="reply-image">
+                            {% endif %}
+                            <p><small>Posted by User {{ reply.user_id }} on {{ reply.created_at }}</small></p>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <form method="POST" action="/comment/reply/{{ comment.id }}" enctype="multipart/form-data">
+                        <textarea name="content" placeholder="Write a reply..." required></textarea>
+                        <input type="file" name="image" accept="image/*">
+                        <button type="submit" class="btn-reply">odpowiedz</button>
+                    </form>
                 </li>
                 {% endfor %}
             </ul>
-
-            <!-- Formularz dodawania odpowiedzi -->
-            <form method="POST" action="/comment/reply/{{ comment.id }}" enctype="multipart/form-data">
-                <textarea name="content" placeholder="Write a reply..." required></textarea>
-                <input type="file" name="image" accept="image/*">
-                <button type="submit" class="btn-reply">Reply</button>
-            </form>
-        </li>
-        {% endfor %}
-    </ul>
-</div>
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Obsługa przycisków do zwijania komentarzy
-        const toggleCommentsButtons = document.querySelectorAll('.toggle-comments-btn');
-
-        toggleCommentsButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const postId = button.getAttribute('data-post-id');
-                const commentsList = document.getElementById(`comments-list-${postId}`);
-
-                if (commentsList.style.display === 'none') {
-                    commentsList.style.display = 'block';
-                    button.textContent = '▼ Comments'; // Zmień tekst na rozwinięcie
-                } else {
-                    commentsList.style.display = 'none';
-                    button.textContent = '► Comments'; // Zmień tekst na zwinięcie
-                }
-            });
-        });
-
-        // Obsługa przycisków do zwijania odpowiedzi
-        const toggleRepliesButtons = document.querySelectorAll('.toggle-replies-btn');
-
-        toggleRepliesButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const commentId = button.getAttribute('data-comment-id');
-                const repliesSection = document.getElementById(`replies-${commentId}`);
-
-                if (repliesSection.style.display === 'none') {
-                    repliesSection.style.display = 'block';
-                    button.textContent = '▼ Replies'; // Zmień tekst na rozwinięcie
-                } else {
-                    repliesSection.style.display = 'none';
-                    button.textContent = '► Replies'; // Zmień tekst na zwinięcie
-                }
-            });
-        });
-    });
-</script>
-
-        
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                // Obsługa przycisku Like
-                const likeButtons = document.querySelectorAll('.like-button');
-                likeButtons.forEach(button => {
-                    button.addEventListener('click', (event) => {
-                        event.preventDefault(); // Zapobiega przeładowaniu strony
-                        const commentId = button.getAttribute('data-comment-id');
-                        fetch(`/comment/like/${commentId}`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            document.getElementById(`likes-count-${commentId}`).textContent = `Likes: ${data.likes_count}`;
-                            document.getElementById(`unlikes-count-${commentId}`).textContent = `Unlikes: ${data.unlikes_count}`;
-                        })
-                        .catch(error => console.error('Error:', error));
-                    });
-                });
-        
-                // Obsługa przycisku Unlike
-                const unlikeButtons = document.querySelectorAll('.unlike-button');
-                unlikeButtons.forEach(button => {
-                    button.addEventListener('click', (event) => {
-                        event.preventDefault(); // Zapobiega przeładowaniu strony
-                        const commentId = button.getAttribute('data-comment-id');
-                        fetch(`/comment/unlike/${commentId}`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            document.getElementById(`likes-count-${commentId}`).textContent = `Likes: ${data.likes_count}`;
-                            document.getElementById(`unlikes-count-${commentId}`).textContent = `Unlikes: ${data.unlikes_count}`;
-                        })
-                        .catch(error => console.error('Error:', error));
-                    });
-                });
-            });
-        </script>
-        
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                // Obsługa przycisków Like
-                const likeButtons = document.querySelectorAll('.like-button');
-                likeButtons.forEach(button => {
-                    button.addEventListener('click', (event) => {
-                        event.preventDefault(); // Zapobiega przeładowaniu strony
-                        const postId = button.getAttribute('data-post-id');
-                        fetch(`/post/like/${postId}`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            document.getElementById(`post-likes-count-${postId}`).textContent = `Likes: ${data.likes_count}`;
-                            document.getElementById(`post-unlikes-count-${postId}`).textContent = `Unlikes: ${data.unlikes_count}`;
-                        })
-                        .catch(error => console.error('Error:', error));
-                    });
-                });
-        
-                // Obsługa przycisków Unlike
-                const unlikeButtons = document.querySelectorAll('.unlike-button');
-                unlikeButtons.forEach(button => {
-                    button.addEventListener('click', (event) => {
-                        event.preventDefault(); // Zapobiega przeładowaniu strony
-                        const postId = button.getAttribute('data-post-id');
-                        fetch(`/post/unlike/${postId}`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            document.getElementById(`post-likes-count-${postId}`).textContent = `Likes: ${data.likes_count}`;
-                            document.getElementById(`post-unlikes-count-${postId}`).textContent = `Unlikes: ${data.unlikes_count}`;
-                        })
-                        .catch(error => console.error('Error:', error));
-                    });
-                });
-            });
-        </script>
-        
-
-        <!-- Edycja i usuwanie (tylko autor) -->
-     <!-- Edycja i usuwanie -->
-     {% if post.user_id == current_user.id %}
-     <a href="{{ url_for('edit_post', post_id=post.id) }}" class="btn-edit">Edit</a>
-     <form method="POST" action="{{ url_for('delete_post', post_id=post.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this post?');">
-         <button type="submit" class="btn-delete">Delete</button>
-        </form>
-        {% endif %}
+        </div>
     </div>
     {% endfor %}
 </div>
+
 
 <!-- Paginacja -->
 <div class="pagination">
@@ -287,4 +132,116 @@
     <a href="{{ url_for('forum', page=posts.next_num) }}">Next &raquo;</a>
     {% endif %}
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggleCommentsButtons = document.querySelectorAll('.toggle-comments-btn');
+        toggleCommentsButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const postId = button.dataset.postId;
+                const commentsList = document.getElementById(`comments-list-${postId}`);
+                if (commentsList.style.display === 'none' || !commentsList.style.display) {
+                    commentsList.style.display = 'block';
+                    button.textContent = '▼ Comments';
+                } else {
+                    commentsList.style.display = 'none';
+                    button.textContent = '► Comments';
+                }
+            });
+        });
+
+        const toggleRepliesButtons = document.querySelectorAll('.toggle-replies-btn');
+        toggleRepliesButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const commentId = button.dataset.commentId;
+                const repliesList = document.getElementById(`replies-${commentId}`);
+                if (repliesList.style.display === 'none' || !repliesList.style.display) {
+                    repliesList.style.display = 'block';
+                    button.textContent = '▼ Replies';
+                } else {
+                    repliesList.style.display = 'none';
+                    button.textContent = '► Replies';
+                }
+            });
+        });
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+        // Obsługa Like dla postów
+        const postLikeButtons = document.querySelectorAll('.like-button[data-post-id]');
+        postLikeButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                const postId = button.getAttribute('data-post-id');
+                fetch(`/post/like/${postId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById(`post-likes-count-${postId}`).textContent = `Likes: ${data.likes_count}`;
+                    document.getElementById(`post-unlikes-count-${postId}`).textContent = `Unlikes: ${data.unlikes_count}`;
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+
+        // Obsługa Unlike dla postów
+        const postUnlikeButtons = document.querySelectorAll('.unlike-button[data-post-id]');
+        postUnlikeButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                const postId = button.getAttribute('data-post-id');
+                fetch(`/post/unlike/${postId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById(`post-likes-count-${postId}`).textContent = `Likes: ${data.likes_count}`;
+                    document.getElementById(`post-unlikes-count-${postId}`).textContent = `Unlikes: ${data.unlikes_count}`;
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+
+        // Obsługa Like dla komentarzy
+        const commentLikeButtons = document.querySelectorAll('.like-button[data-comment-id]');
+        commentLikeButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                const commentId = button.getAttribute('data-comment-id');
+                fetch(`/comment/like/${commentId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById(`likes-count-${commentId}`).textContent = `Likes: ${data.likes_count}`;
+                    document.getElementById(`unlikes-count-${commentId}`).textContent = `Unlikes: ${data.unlikes_count}`;
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+
+        // Obsługa Unlike dla komentarzy
+        const commentUnlikeButtons = document.querySelectorAll('.unlike-button[data-comment-id]');
+        commentUnlikeButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                const commentId = button.getAttribute('data-comment-id');
+                fetch(`/comment/unlike/${commentId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById(`likes-count-${commentId}`).textContent = `Likes: ${data.likes_count}`;
+                    document.getElementById(`unlikes-count-${commentId}`).textContent = `Unlikes: ${data.unlikes_count}`;
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    });
+</script>
+
 {% endblock %}

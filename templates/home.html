@@ -5,16 +5,16 @@
 {% block content %}
 <section class="welcome">
     {% if current_user.is_authenticated %}
-        <h1>Welcome back, {{ current_user.username }}!</h1>
-        <p>Ready to continue your fitness journey? Check out your <a href="/profile">profile</a>.</p>
+        <h1>Witamy ponownie, {{ current_user.username }}!</h1>
+        <p>Gotowy na kontynuację swojej przygody z fitnessem? Sprawdź swój <a href="/profile">profil</a>.</p>
     {% else %}
-        <h1>Welcome to My Fitness App</h1>
-        <p>Your journey to better health starts here. <button class="btn glass"><a href="/register">Zarejestruj się</a></button> lub <button class="btn glass"><a href="/login">Zaloguj się</a></button> to get started!</p>
+        <h1>Witamy w ZeusDAWCompany</h1>
+        <p>Twoja podróż do lepszego zdrowia zaczyna się tutaj. <button class="btn glass"><a href="/register">Zarejestruj się</a></button> lub <button class="btn glass"><a href="/login">Zaloguj się</a></button> to get started!</p>
     {% endif %}
 </section>
 
 <section class="features">
-    <h2>What We Offer</h2>
+    <h2>Co oferujemy?</h2>
     <div class="feature-list">
         
         <div class="card glass w-96">
@@ -24,10 +24,10 @@
                 alt="Diet" />
             </figure>
             <div class="card-body items-center text-center">
-              <h2 class="card-title">Personalized Diet Plans</h2>
-              <p>Create a meal plan tailored to your goals.</p>
+              <h2 class="card-title">Spersonalizowane plany dietetyczne</h2>
+              <p>Stwórz plan posiłków dostosowany do Twoich celów.</p>
               <div class="card-actions">
-                <button class="btn glass"><a href="/diets">Explore Diets</a></button>
+                <button class="btn glass"><a href="/diets">Przeglądaj diety</a></button>
               </div>
             </div>
           </div>
@@ -38,10 +38,10 @@
                 alt="Exercise" />
             </figure>
             <div class="card-body items-center text-center">
-              <h2 class="card-title">Workout Programs</h2>
-              <p>Follow structured workout routines.</p>
+              <h2 class="card-title">Programy treningowe</h2>
+              <p>Postępuj zgodnie z ustrukturyzowanymi procedurami treningowymi.</p>
               <div class="card-actions">
-                <button class="btn glass"><a href="/diets">View Workouts</a></button>
+                <button class="btn glass"><a href="/exercises">Zobacz treningi</a></button>
               </div>
             </div>
           </div>
@@ -53,10 +53,10 @@
                  />
             </figure>
             <div class="card-body items-center text-center">
-              <h2 class="card-title">Community Forum</h2>
-              <p>Connect with others and share tips.</p>
+              <h2 class="card-title">Forum społeczności</h2>
+              <p>Połącz się z innymi i dziel się wskazówkami.</p>
               <div class="card-actions">
-                <button class="btn glass"><a href="/diets">Visit Forum</a></button>
+                <button class="btn glass"><a href="/forum">Odwiedź Forum</a></button>
               </div>
             </div>
           </div>
@@ -64,10 +64,155 @@
         
     </div>
 </section>
+<section class="sec1">
+  <!-- Top Dietetycy -->
+  <div class="column1"> 
+      <h2>Top 5 Dietetycy</h2>
+      <div class="profile1">
+          <img src="/static/images-html/dietetyk1.webp" alt="Dietetyk 1">
+          <div>
+              <span>Dietetyk Anna Kowalska</span>
+              <span class="details">Doświadczenie: 10 lat</span>
+              <span class="details">Email: anna.kowalska@example.com</span>
+              <span class="details">Telefon: +48 123 456 789</span>
+          </div>
+      </div>
+      <div class="profile1">
+          <img src="/static/images-html/dietetyk2.webp" alt="Dietetyk 2">
+          <div>
+              <span>Dietetyk Jan Nowak</span>
+              <span class="details">Doświadczenie: 8 lat</span>
+              <span class="details">Email: jan.nowak@example.com</span>
+              <span class="details">Telefon: +48 987 654 321</span>
+          </div>
+      </div>
+      <div class="profile1">
+          <img src="/static/images-html/dietetyk3.webp" alt="Dietetyk 3">
+          <div>
+              <span>Dietetyk Maria Wiśniewska</span>
+              <span class="details">Doświadczenie: 6 lat</span>
+              <span class="details">Email: maria.wisniewska@example.com</span>
+              <span class="details">Telefon: +48 456 789 123</span>
+          </div>
+      </div>
+      <div class="profile1">
+          <img src="/static/images-html/dietetyk4.webp" alt="Dietetyk 4">
+          <div>
+              <span>Dietetyk Piotr Zieliński</span>
+              <span class="details">Doświadczenie: 7 lat</span>
+              <span class="details">Email: piotr.zielinski@example.com</span>
+              <span class="details">Telefon: +48 321 654 987</span>
+          </div>
+      </div>
+      <div class="profile1">
+          <img src="/static/images-html/dietetyk5.webp" alt="Dietetyk 5">
+          <div>
+              <span>Dietetyk Katarzyna Jabłońska</span>
+              <span class="details">Doświadczenie: 9 lat</span>
+              <span class="details">Email: katarzyna.jablonska@example.com</span>
+              <span class="details">Telefon: +48 654 321 987</span>
+          </div>
+      </div>
+  </div>
 
+  <!-- Top Trenerzy -->
+  <div class="column1">
+      <h2>Top 5 Trenerzy Personalni</h2>
+      <div class="profile1">
+          <img src="/static/images-html/trener1.webp" alt="Trener 1">
+          <div>
+              <span>Trener Tomasz Wiśniewski</span>
+              <span class="details">Doświadczenie: 12 lat</span>
+              <span class="details">Email: tomasz.wisniewski@example.com</span>
+              <span class="details">Telefon: +48 111 222 333</span>
+          </div>
+      </div>
+      <div class="profile1">
+          <img src="/static/images-html/trener2.webp" alt="Trener 2">
+          <div>
+              <span>Trener Monika Zielińska</span>
+              <span class="details">Doświadczenie: 10 lat</span>
+              <span class="details">Email: monika.zielinska@example.com</span>
+              <span class="details">Telefon: +48 444 555 666</span>
+          </div>
+      </div>
+      <div class="profile1">
+          <img src="/static/images-html/trener3.webp" alt="Trener 3">
+          <div>
+              <span>Trener Krzysztof Nowicki</span>
+              <span class="details">Doświadczenie: 9 lat</span>
+              <span class="details">Email: krzysztof.nowicki@example.com</span>
+              <span class="details">Telefon: +48 777 888 999</span>
+          </div>
+      </div>
+      <div class="profile1">
+          <img src="/static/images-html/trener4.webp" alt="Trener 4">
+          <div>
+              <span>Trener Ewa Kowalczyk</span>
+              <span class="details">Doświadczenie: 8 lat</span>
+              <span class="details">Email: ewa.kowalczyk@example.com</span>
+              <span class="details">Telefon: +48 222 333 444</span>
+          </div>
+      </div>
+      <div class="profile1">
+          <img src="/static/images-html/trener5.webp" alt="Trener 5">
+          <div>
+              <span>Trener Michał Jabłoński</span>
+              <span class="details">Doświadczenie: 11 lat</span>
+              <span class="details">Email: michal.jablonski@example.com</span>
+              <span class="details">Telefon: +48 555 666 777</span>
+          </div>
+      </div>
+  </div>
+  <style>
+  .sec1 {
+    display: flex;
+    width: 100%;
+   
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 20px 0;
+}
+.column1 {
+    flex: 1;
+    padding: 20px;
+}
+.column1 h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.profile1 {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.profile1 img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.profile1 div {
+    display: flex;
+    flex-direction: column;
+}
+.profile1 span {
+    font-size: 16px;
+    font-weight: bold;
+}
+.profile1 .details {
+    font-size: 14px;
+    color: #555;
+}
+
+
+
+</style>
+</section>
 <section class="cta">
-    <h2>Join Us Today</h2>
-    <p>Don't wait to start your transformation. Take the first step now!</p>
-    <a href="/register" class="cta-button">Sign Up Now</a>
+    <h2>Dołącz do na już dziś</h2>
+    <p>Nie czekaj, aby rozpocząć swoją transformację. Zrób pierwszy krok już teraz!</p>
+    <button class="btn glass"><a href="/register" >Zarejestruj się teraz!</a></button>
 </section>
 {% endblock %}

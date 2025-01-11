@@ -3,53 +3,65 @@
 {% block title %}My Diets{% endblock %}
 
 {% block content %}
-<h1>My Diets</h1>
-
 <!-- Przycisk dodania nowej diety -->
-<a href="{{ url_for('add_diet') }}" class="btn-add-diet">Add Diet</a>
+<button class="btn btn-primary"><a href="{{ url_for('add_diet') }}" class="btn-add-diet">Add Diet</a></button>
+<button class="btn btn-primary"><a href="{{ url_for('profile') }}" >Powrót</a></button>
 
 <!-- Kafelki z dietami -->
-<div class="diet-cards">
+<div class="exercise-cards">
     {% for diet in diets %}
-    <div class="diet-card">
-        <h3>{{ diet.day_of_week }}</h3>
-        <p><strong>Breakfast:</strong> {{ diet.breakfast }}</p>
+    <div class="card glass w-96">
+        <div class="card-body">
+            
+            {% set days_translation = {
+                "Monday": "Poniedziałek",
+                "Tuesday": "Wtorek",
+                "Wednesday": "Środa",
+                "Thursday": "Czwartek",
+                "Friday": "Piątek",
+                "Saturday": "Sobota",
+                "Sunday": "Niedziela"
+            } %}
+            
+            <h3>{{ days_translation[diet.day_of_week] }}</h3>
+        <p><strong>Śniadanie:</strong> {{ diet.breakfast }}</p>
         <details>
-            <summary>Recipe</summary>
+            <summary>Przepis</summary>
             <p>{{ diet.breakfast_recipe[0].details if diet.breakfast_recipe }}</p>
         </details>
 
-        <p><strong>Second Breakfast:</strong> {{ diet.second_breakfast }}</p>
+        <p><strong>Drugie śniadanie:</strong> {{ diet.second_breakfast }}</p>
         <details>
-            <summary>Recipe</summary>
+            <summary>Przepis</summary>
             <p>{{ diet.second_breakfast_recipe[0].details if diet.second_breakfast_recipe }}</p>
         </details>
 
-        <p><strong>Lunch:</strong> {{ diet.lunch }}</p>
+        <p><strong>Obiad:</strong> {{ diet.lunch }}</p>
         <details>
-            <summary>Recipe</summary>
+            <summary>Przepis</summary>
             <p>{{ diet.lunch_recipe[0].details if diet.lunch_recipe }}</p>
         </details>
 
-        <p><strong>Dinner:</strong> {{ diet.dinner }}</p>
+        <p><strong>Kolacja:</strong> {{ diet.dinner }}</p>
         <details>
-            <summary>Recipe</summary>
+            <summary>Przepis</summary>
             <p>{{ diet.dinner_recipe[0].details if diet.dinner_recipe }}</p>
         </details>
 
-        <p><strong>Snack:</strong> {{ diet.snack }}</p>
+        <p><strong>Podwieczorek:</strong> {{ diet.snack }}</p>
         <details>
-            <summary>Recipe</summary>
+            <summary>Przepis</summary>
             <p>{{ diet.snack_recipe[0].details if diet.snack_recipe }}</p>
         </details>
 
         <!-- Przycisk edycji i usuwania -->
         <div class="diet-actions">
-            <a href="{{ url_for('edit_diet', diet_id=diet.id) }}" class="btn-edit">Edit</a>
+            <a href="{{ url_for('edit_diet', diet_id=diet.id) }}" class="btn-edit">Edytuj</a>
             <form method="POST" action="{{ url_for('delete_diet', diet_id=diet.id) }}" class="delete-form">
-                <button type="submit" class="btn-delete">Delete</button>
+                <button type="submit" class="btn-delete">Usuń</button>
             </form>
         </div>
+    </div>
     </div>
     {% endfor %}
 </div>

@@ -104,18 +104,18 @@ class Product(db.Model):
 class Diet(db.Model):
     __tablename__ = 'diet'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False) 
-    wiek = db.Column(db.String(20), nullable=False)  
-    gender = db.Column(db.String(10), nullable=False) 
-    activity_level = db.Column(db.String(50), nullable=False)  
-    preferences = db.Column(db.Text, nullable=True)   
-    exclusions = db.Column(db.Text, nullable=True)   
-    other_details = db.Column(db.Text, nullable=True) 
-    breakfast = db.Column(db.Text, nullable=False)   
-    second_breakfast = db.Column(db.Text, nullable=True) 
-    lunch = db.Column(db.Text, nullable=False)        
-    snack = db.Column(db.Text, nullable=True)        
-    dinner = db.Column(db.Text, nullable=False)       
+    Tytuł = db.Column(db.String(100), nullable=False) 
+    Wiek = db.Column(db.String(20), nullable=False)  
+    Płeć = db.Column(db.String(10), nullable=False) 
+    Poziom_aktywności_fizycznej = db.Column(db.String(50), nullable=False)  
+    Preferencje = db.Column(db.Text, nullable=True)   
+    Wykluczenia = db.Column(db.Text, nullable=True)   
+    Inne_szczegóły = db.Column(db.Text, nullable=True) 
+    Śniadanie = db.Column(db.Text, nullable=False)   
+    Drugie_śniadanie = db.Column(db.Text, nullable=True) 
+    Obiad = db.Column(db.Text, nullable=False)        
+    Podwieczorek = db.Column(db.Text, nullable=True)        
+    Kolacja = db.Column(db.Text, nullable=False)       
 class Exercise(db.Model):
     __tablename__ = 'exercise'
     id = db.Column(db.Integer, primary_key=True)
@@ -150,8 +150,7 @@ class JournalEntry(db.Model):
 class Recipe(db.Model):
     __tablename__ = 'recipe'
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.Text, nullable=False)
-    
+    content = db.Column(db.Text, nullable=False, default="Default content")
     breakfast_id = db.Column(db.Integer, db.ForeignKey('diets.id'), nullable=True)
     second_breakfast_id = db.Column(db.Integer, db.ForeignKey('diets.id'), nullable=True)
     lunch_id = db.Column(db.Integer, db.ForeignKey('diets.id'), nullable=True)
@@ -200,6 +199,7 @@ class Achievement(db.Model):
     achieved_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     icon = db.Column(db.String(300), nullable=True)  # Ścieżka do ikony odznaki
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    
     user = db.relationship('User', backref='achievements')
 
 

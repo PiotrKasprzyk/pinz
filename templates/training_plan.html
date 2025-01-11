@@ -7,28 +7,40 @@
 
 <a href="{{ url_for('add_training_plan') }}" class="btn btn-primary">Add New Training Plan</a>
 
-<div class="training-plans">
+<div class="exercise-cards">
     {% for plan in grouped_plans %}
-    <div class="training-card">
-        <h3><strong>{{ plan.day_of_week }}</strong></h3>
-        <p><strong>Time:</strong> {{ plan.start_time }} - {{ plan.end_time }}</p>
+    <div class="card glass w-96">
+        <div class="card-body">
+            {% set days_translation = {
+                "Monday": "Poniedziałek",
+                "Tuesday": "Wtorek",
+                "Wednesday": "Środa",
+                "Thursday": "Czwartek",
+                "Friday": "Piątek",
+                "Saturday": "Sobota",
+                "Sunday": "Niedziela"
+            } %}
+            
+            <h3>{{ days_translation[plan.day_of_week] }}</h3>
+        <p><strong>Czas:</strong> {{ plan.start_time }} - {{ plan.end_time }}</p>
         
-        <h4>Exercises:</h4>
+        
         <ul>
             {% for exercise in plan.exercises %}
             <li>
-                <strong>Category:</strong> {{ exercise.category }}<br>
-                <strong>Exercise:</strong> {{ exercise.exercise }}<br>
-                <strong>Sets:</strong> {{ exercise.sets }}<br>
-                <strong>Reps:</strong> {{ exercise.reps }}<br>
-                <strong>Notes:</strong> {{ exercise.notes or 'N/A' }}
+                <strong>Kategoria:</strong> {{ exercise.category }}<br>
+                <strong>Ćwiczenie:</strong> {{ exercise.exercise }}<br>
+                <strong>Serie:</strong> {{ exercise.sets }}<br>
+                <strong>Powtórzenia:</strong> {{ exercise.reps }}<br>
+                <strong>Notatki:</strong> {{ exercise.notes or 'N/A' }}
             </li>
             {% endfor %}
         </ul>
         <form method="POST" action="{{ url_for('delete_training_plan', plan_id=plan.id) }}" style="display:inline;">
-            <button type="submit" class="btn btn-danger">Delete</button>
+            <button type="submit" class="btn btn-danger">Usuń</button>
         </form>
-        <a href="{{ url_for('edit_training_plan', plan_id=plan.id) }}" class="btn btn-primary">Edit</a>
+        <a href="{{ url_for('edit_training_plan', plan_id=plan.id) }}" class="btn btn-primary">Edytuj</a>
+    </div>
     </div>
     {% endfor %}
 </div>
@@ -46,7 +58,7 @@
         padding: 15px;
         box-shadow: 2px 2px 12px #ddd;
         width: 45%;
-        background-color: #f9f9f9;
+        background-color:rgb(255, 0, 0);
     }
 
     .training-card h3 {

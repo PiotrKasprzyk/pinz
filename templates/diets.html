@@ -3,20 +3,24 @@
 {% block title %}Diets{% endblock %}
 
 {% block content %}
-<h1>Proposed Diets</h1>
 
-<div class="diets-container">
+
+<div class="exercise-cards">
     {% for diet in diets %}
-    <div class="diet-card">
-        <h2>{{ diet.name }}</h2>
-        <p><strong>Wiek:</strong> {{ diet.wiek }}</p>
-        <p><strong>Gender:</strong> {{ diet.gender }}</p>
-        <p><strong>Activity Level:</strong> {{ diet.activity_level }}</p>
-        <p><strong>Preferences:</strong> {{ diet.preferences or 'None' }}</p>
-        <p><strong>Exclusions:</strong> {{ diet.exclusions or 'None' }}</p>
-        <p><strong>Other:</strong> {{ diet.other_details or 'None' }}</p>
-        <a href="/diets/{{ diet.id }}" class="view-meal-plan">View Meal Plan</a>
+    <div class="card glass w-96">
+      <div class="card-body">
+        <h2 class="card-title">{{ diet.Tytuł }}</h2>
+        <p><strong>Wiek:</strong> {{ diet.Wiek }}</p>
+        <p><strong>Płeć:</strong> {{ diet.Płeć }}</p>
+        <p><strong>Poziom aktywności fizycznej:</strong> {{ diet.Poziom_aktywności_fizycznej }}</p>
+        <p><strong>Preferencje:</strong> {{ diet.Preferencje or 'None' }}</p>
+        <p><strong>Wykluczenia:</strong> {{ diet.Wykluczenia or 'None' }}</p>
+        <p><strong>Inne:</strong> {{ diet.Inne_szczegóły or 'None' }}</p>
+        <a href="/diets/{{ diet.id }}" class="btn btn-primary">Więcej!</a>
+      </div>
     </div>
+    
+  
     {% endfor %}
 </div>
 {% endblock %}

@@ -3,32 +3,32 @@
 {% block title %}Diet Details{% endblock %}
 
 {% block content %}
-<h1>{{ diet.name }}</h1>
-<p><strong>Wiek:</strong> {{ diet.wiek }}</p>
-<p><strong>Gender:</strong> {{ diet.gender }}</p>
-<p><strong>Activity Level:</strong> {{ diet.activity_level }}</p>
-<p><strong>Preferences:</strong> {{ diet.preferences or 'None' }}</p>
-<p><strong>Exclusions:</strong> {{ diet.exclusions or 'None' }}</p>
-<p><strong>Other:</strong> {{ diet.other_details or 'None' }}</p>
+<h1>{{ diet.Tytuł }}</h1>
+<p><strong>Wiek:</strong> {{ diet.Wiek }}</p>
+<p><strong>Płeć:</strong> {{ diet.Płeć }}</p>
+<p><strong>Poziom aktywności fizycznej:</strong> {{ diet.Poziom_aktywności_fizycznej }}</p>
+<p><strong>Preferencje:</strong> {{ diet.Preferencje or 'None' }}</p>
+<p><strong>Wykluczenia:</strong> {{ diet.Wykluczenia or 'None' }}</p>
+<p><strong>Inne:</strong> {{ diet.Inne_szczegóły or 'None' }}</p>
 
 <hr>
 
-<h2>Meal Plan</h2>
+<h2>Plan dietetyczny</h2>
 <div class="meal-plan">
-    <h3>Breakfast</h3>
-    <p>{{ diet.breakfast }}</p>
+    <h3>Śniadanie</h3>
+    <p>{{ diet.Śniadanie }}</p>
 
-    <h3>Second Breakfast</h3>
-    <p>{{ diet.second_breakfast or 'None' }}</p>
+    <h3>Drugie_śniadanie</h3>
+    <p>{{ diet.Drugie_śniadanie or 'None' }}</p>
 
-    <h3>Lunch</h3>
-    <p>{{ diet.lunch }}</p>
+    <h3>Obiad</h3>
+    <p>{{ diet.Obiad }}</p>
 
-    <h3>Snack</h3>
-    <p>{{ diet.snack or 'None' }}</p>
+    <h3>Podwieczorek</h3>
+    <p>{{ diet.Podwieczorek or 'None' }}</p>
 
-    <h3>Dinner</h3>
-    <p>{{ diet.dinner }}</p>
+    <h3>Kolacja</h3>
+    <p>{{ diet.Kolacja }}</p>
 </div>
 <a href="/diets" class="back-button">Back to Diets</a>
 {% endblock %}

@@ -9,6 +9,7 @@ from flask import jsonify
 import json
 from itsdangerous import URLSafeTimedSerializer
 import resend
+from flask_migrate import Migrate   
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  
@@ -18,7 +19,11 @@ login_manager.login_view = 'login'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
-UPLOAD_FOLDER = 'static/uploads'
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'uploads')
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 with app.app_context():
     db.create_all()
@@ -142,7 +147,9 @@ def register():
         return redirect(url_for('login'))
 
     return render_template('register.html')
-
+@app.route('/terms-and-conditions')
+def terms_and_conditions():
+    return render_template('terms_and_conditions.html')
     
 @app.route('/verify/<token>')
 def verify_email(token):
@@ -374,7 +381,7 @@ def add_comment(post_id):
         filename = secure_filename(image_file.filename)
         image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         image_file.save(image_path)
-        image_path = image_path.replace("\\", "/")
+        image_path = os.path.join('uploads', filename)
 
     new_comment = Comment(
         post_id=post_id,
@@ -1169,22 +1176,44 @@ def edit_training_plan(plan_id):
 @app.route('/profile/achievements')
 @login_required
 def achievements():
-    category = request.args.get('category')  
+    category = request.args.get('category')  # Pobierz kategorię z parametru GET
     query = Achievement.query.filter_by(user_id=current_user.id)
     
-    if category:  
+    if category:  # Filtrowanie po kategorii
         query = query.filter_by(category=category)
 
     user_achievements = query.all()
     categories = Achievement.query.with_entities(Achievement.category).distinct().all()
-    categories = [c[0] for c in categories] 
-    
+    categories = [c[0] for c in categories]  # Lista unikalnych kategorii
+    test_achievements = [
+        {
+            'title': 'Profile Complete',
+            'description': 'You completed your profile!',
+            'category': 'Profile',
+            'icon': 'icons/profile_complete.png',
+            'created_at': datetime.utcnow()
+        },
+        {
+            'title': 'First Journal Entry',
+            'description': 'You added your first journal entry!',
+            'category': 'Journal',
+            'icon': 'icons/first_journal.png',
+            'created_at': datetime.utcnow()
+        }
+    ]
     return render_template(
         'achievements.html', 
-        achievements=user_achievements, 
+        achievements=test_achievements, 
         categories=categories, 
         selected_category=category
     )
+def add_test_achievements():
+    achievements = [
+        Achievement(user_id=current_user.id, title="Test Achievement 1", description="Description 1", category="Profile", icon="icons/test1.png"),
+        Achievement(user_id=current_user.id, title="Test Achievement 2", description="Description 2", category="Journal", icon="icons/test2.png"),
+    ]
+    db.session.bulk_save_objects(achievements)
+    db.session.commit()
 
 def get_user_achievements(user_id):
     """ Pobiera osiągnięcia użytkownika. """
@@ -1218,7 +1247,10 @@ def update_profile():
                 category="Profile",
                 icon="icons/profile_complete.png"
             )
+    print("Profile updated successfully!")
 
+    # Sprawdzanie osiągnięć
+    check_and_award_achievements(user)
     db.session.commit()
     flash("Profile updated successfully!", "success")
     return redirect(url_for('profile_details'))
@@ -1332,7 +1364,7 @@ def add_achievement(user_id, title, description, category, icon):
         icon=icon
     )
     db.session.add(achievement)
-    db.session.commit()
+    db.session.commit()        
 from flask import render_template, request, redirect, url_for, flash, send_file
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -1656,6 +1688,7 @@ def my_diets():
 
     diets = Diets.query.filter_by(user_id=current_user.id).all()  
     return render_template('my_diets.html', diets=diets)
+
 @app.route('/profile/diets/edit/<int:diet_id>', methods=['GET', 'POST'])
 @login_required
 def edit_diet(diet_id):
@@ -1771,210 +1804,213 @@ if __name__ == '__main__':
         if not Diet.query.first():
             diets = [
                 Diet(
-    name="Dieta odchudzająca przy niskiej aktywności",
-    wiek="30-40",
-    gender="Kobieta",
-    activity_level="Niska",
-    preferences="Wegetariańska, bez laktozy",
-    exclusions="Laktoza",
-    other_details="Skupienie na deficycie kalorycznym i zbilansowanym żywieniu",
-    breakfast="Owsianka na mleku migdałowym z orzechami i świeżymi jagodami",
-    second_breakfast="Sałatka z komosy ryżowej z awokado i pomidorkami koktajlowymi",
-    lunch="Grillowane tofu z brokułami na parze i kaszą jaglaną",
-    snack="Słupki warzyw z hummusem",
-    dinner="Zupa krem z cukinii z pestkami słonecznika i pełnoziarnistym chlebem"
+    Tytuł="Dieta odchudzająca przy niskiej aktywności",
+    Wiek="30-40",
+    Płeć="Kobieta",
+    Poziom_aktywności_fizycznej="Niska",
+    Preferencje="Wegetariańska, bez laktozy",
+    Wykluczenia="Laktoza",
+    Inne_szczegóły="Skupienie na deficycie kalorycznym i zbilansowanym żywieniu",
+    Śniadanie="Owsianka na mleku migdałowym z orzechami i świeżymi jagodami",
+    Drugie_śniadanie="Sałatka z komosy ryżowej z awokado i pomidorkami koktajlowymi",
+    Obiad="Grillowane tofu z brokułami na parze i kaszą jaglaną",
+    Podwieczorek="Słupki warzyw z hummusem",
+    Kolacja="Zupa krem z cukinii z pestkami słonecznika i pełnoziarnistym chlebem"
 ),
 Diet(
-    name="Dieta na masę mięśniową dla aktywnych mężczyzn",
-    wiek="20-30",
-    gender="Mężczyzna",
-    activity_level="Wysoka",
-    preferences="Tradycyjna, wysokobiałkowa",
-    exclusions="Brak",
-    other_details="Bogata w białko i zdrowe tłuszcze",
-    breakfast="Jajecznica z chlebem żytnim i awokado",
-    second_breakfast="Shake białkowy z bananem i masłem orzechowym",
-    lunch="Grillowany kurczak z ryżem basmati i surówką z marchewki i jabłka",
-    snack="Omlet owsiany z owocami sezonowymi",
-    dinner="Pieczony łosoś z puree z batatów i gotowanymi szparagami"
+    Tytuł="Dieta na masę mięśniową dla aktywnych mężczyzn",
+    Wiek="20-30",
+    Płeć="Mężczyzna",
+    Poziom_aktywności_fizycznej="Wysoka",
+    Preferencje="Tradycyjna, wysokobiałkowa",
+    Wykluczenia="Brak",
+    Inne_szczegóły="Bogata w białko i zdrowe tłuszcze",
+    Śniadanie="Jajecznica z chlebem żytnim i awokado",
+    Drugie_śniadanie="Shake białkowy z bananem i masłem orzechowym",
+    Obiad="Grillowany kurczak z ryżem basmati i surówką z marchewki i jabłka",
+    Podwieczorek="Omlet owsiany z owocami sezonowymi",
+    Kolacja="Pieczony łosoś z puree z batatów i gotowanymi szparagami"
 ),
 Diet(
-    name="Dieta śródziemnomorska dla zdrowia serca",
-    wiek="45-60",
-    gender="Kobieta",
-    activity_level="Umiarkowana",
-    preferences="Śródziemnomorska",
-    exclusions="Tłuszcze trans, ograniczone czerwone mięso",
-    other_details="Skupienie na kwasach omega-3 i jednonienasyconych tłuszczach",
-    breakfast="Pełnoziarnisty tost z awokado, oliwą z oliwek, pomidorem i bazylią",
-    second_breakfast="Garść migdałów i świeża pomarańcza",
-    lunch="Grillowana pierś z indyka z kaszą bulgur i gotowaną cukinią z papryką",
-    snack="Jogurt grecki niskotłuszczowy z miodem i orzechami włoskimi",
-    dinner="Sałatka grecka z oliwkami, serem feta i dressingiem z oliwy z oliwek"
+    Tytuł="Dieta śródziemnomorska dla zdrowia serca",
+    Wiek="45-60",
+    Płeć="Kobieta",
+    Poziom_aktywności_fizycznej="Umiarkowana",
+    Preferencje="Śródziemnomorska",
+    Wykluczenia="Tłuszcze trans, ograniczone czerwone mięso",
+    Inne_szczegóły="Skupienie na kwasach omega-3 i jednonienasyconych tłuszczach",
+    Śniadanie="Pełnoziarnisty tost z awokado, oliwą z oliwek, pomidorem i bazylią",
+    Drugie_śniadanie="Garść migdałów i świeża pomarańcza",
+    Obiad="Grillowana pierś z indyka z kaszą bulgur i gotowaną cukinią z papryką",
+    Podwieczorek="Jogurt grecki niskotłuszczowy z miodem i orzechami włoskimi",
+    Kolacja="Sałatka grecka z oliwkami, serem feta i dressingiem z oliwy z oliwek"
 ),
 Diet(
-    name="Wegańska dieta dla osób z cukrzycą",
-    wiek="35-50",
-    gender="Mężczyzna",
-    activity_level="Umiarkowana",
-    preferences="Wegańska",
-    exclusions="Produkty o wysokim indeksie glikemicznym",
-    other_details="Dania o niskim IG z naciskiem na rośliny strączkowe i warzywa liściaste",
-    breakfast="Jaglanka z orzechami włoskimi, cynamonem i borówkami",
-    second_breakfast="Marchewki z pastą z pieczonej papryki i ciecierzycy",
-    lunch="Gulasz z soczewicy, pomidorów i bakłażana z brązowym ryżem",
-    snack="Koktajl z jarmużu, ogórka, jabłka i cytryny",
-    dinner="Pieczone warzywa korzeniowe z ziołami i oliwą z oliwek"
+    Tytuł="Wegańska dieta dla osób z cukrzycą",
+    Wiek="35-50",
+    Płeć="Mężczyzna",
+    Poziom_aktywności_fizycznej="Umiarkowana",
+    Preferencje="Wegańska",
+    Wykluczenia="Produkty o wysokim indeksie glikemicznym",
+    Inne_szczegóły="Dania o niskim IG z naciskiem na rośliny strączkowe i warzywa liściaste",
+    Śniadanie="Jaglanka z orzechami włoskimi, cynamonem i borówkami",
+    Drugie_śniadanie="Marchewki z pastą z pieczonej papryki i ciecierzycy",
+    Obiad="Gulasz z soczewicy, pomidorów i bakłażana z brązowym ryżem",
+    Podwieczorek="Koktajl z jarmużu, ogórka, jabłka i cytryny",
+    Kolacja="Pieczone warzywa korzeniowe z ziołami i oliwą z oliwek"
 ),
 Diet(
-    name="Dieta ketogeniczna dla sportowców siłowych",
-    wiek="25-35",
-    gender="Mężczyzna",
-    activity_level="Wysoka",
-    preferences="Keto",
-    exclusions="Węglowodany powyżej 50g/dzień",
-    other_details="Wysoka zawartość tłuszczów i białka wspierająca rozwój mięśni",
-    breakfast="Jajecznica na maśle klarowanym z boczkiem i awokado",
-    second_breakfast="Masło migdałowe z łodygami selera",
-    lunch="Stek wołowy z masłem czosnkowym i brokułami na parze",
-    snack="Kostki sera i oliwki",
-    dinner="Pieczony łosoś z puree z kalafiora i sałatką z rukoli"
+    Tytuł="Dieta ketogeniczna dla sportowców siłowych",
+    Wiek="25-35",
+    Płeć="Mężczyzna",
+    Poziom_aktywności_fizycznej="Wysoka",
+    Preferencje="Keto",
+    Wykluczenia="Węglowodany powyżej 50g/dzień",
+    Inne_szczegóły="Wysoka zawartość tłuszczów i białka wspierająca rozwój mięśni",
+    Śniadanie="Jajecznica na maśle klarowanym z boczkiem i awokado",
+    Drugie_śniadanie="Masło migdałowe z łodygami selera",
+    Obiad="Stek wołowy z masłem czosnkowym i brokułami na parze",
+    Podwieczorek="Kostki sera i oliwki",
+    Kolacja="Pieczony łosoś z puree z kalafiora i sałatką z rukoli"
 ),
 Diet(
-    name="Dieta dla kobiet w ciąży",
-    wiek="30-40",
-    gender="Kobieta",
-    activity_level="Umiarkowana",
-    preferences="Zróżnicowana, tradycyjna",
-    exclusions="Surowe ryby, sery pleśniowe",
-    other_details="Bogata w kwas foliowy, żelazo i wapń",
-    breakfast="Owsianka z orzechami i gruszką",
-    second_breakfast="Kanapka z chleba pełnoziarnistego z pastą jajeczną, sałatą i pomidorem",
-    lunch="Filet z kurczaka pieczony z ziołami, kasza pęczak i surówka z marchewki i jabłka",
-    snack="Jogurt naturalny z granolą i jagodami",
-    dinner="Zupa krem z dyni z pestkami słonecznika i pełnoziarnistymi grzankami"
+    Tytuł="Dieta dla kobiet w ciąży",
+    Wiek="30-40",
+    Płeć="Kobieta",
+    Poziom_aktywności_fizycznej="Umiarkowana",
+    Preferencje="Zróżnicowana, tradycyjna",
+    Wykluczenia="Surowe ryby, sery pleśniowe",
+    Inne_szczegóły="Bogata w kwas foliowy, żelazo i wapń",
+    Śniadanie="Owsianka z orzechami i gruszką",
+    Drugie_śniadanie="Kanapka z chleba pełnoziarnistego z pastą jajeczną, sałatą i pomidorem",
+    Obiad="Filet z kurczaka pieczony z ziołami, kasza pęczak i surówka z marchewki i jabłka",
+    Podwieczorek="Jogurt naturalny z granolą i jagodami",
+    Kolacja="Zupa krem z dyni z pestkami słonecznika i pełnoziarnistymi grzankami"
 ),
 Diet(
-    name="Dieta wysokobiałkowa na regenerację",
-    wiek="30-50",
-    gender="Mężczyzna",
-    activity_level="Średnia",
-    preferences="Wysokobiałkowa, zróżnicowana",
-    exclusions="Brak",
-    other_details="Podnosi regenerację mięśni i dostarcza dużo energii",
-    breakfast="Omlet z warzywami i pełnoziarnistym pieczywem",
-    second_breakfast="Shake białkowy z mlekiem migdałowym i truskawkami",
-    lunch="Grillowana pierś z kurczaka z ryżem brązowym i brokułami",
-    snack="Serek wiejski z orzechami włoskimi",
-    dinner="Pieczeń wołowa z puree z batatów i fasolką szparagową"
+    Tytuł="Dieta wysokobiałkowa na regenerację",
+    Wiek="30-50",
+    Płeć="Mężczyzna",
+    Poziom_aktywności_fizycznej="Średnia",
+    Preferencje="Wysokobiałkowa, zróżnicowana",
+    Wykluczenia="Brak",
+    Inne_szczegóły="Podnosi regenerację mięśni i dostarcza dużo energii",
+    Śniadanie="Omlet z warzywami i pełnoziarnistym pieczywem",
+    Drugie_śniadanie="Shake białkowy z mlekiem migdałowym i truskawkami",
+    Obiad="Grillowana pierś z kurczaka z ryżem brązowym i brokułami",
+    Podwieczorek="Serek wiejski z orzechami włoskimi",
+    Kolacja="Pieczeń wołowa z puree z batatów i fasolką szparagową"
 ),
 Diet(
-    name="Dieta dla seniorów z osteoporozą",
-    wiek="60-70",
-    gender="Kobieta",
-    activity_level="Niska",
-    preferences="Tradycyjna, bogata w wapń",
-    exclusions="Brak",
-    other_details="Wzmacnia kości i stawy",
-    breakfast="Twarożek z rzodkiewką, szczypiorkiem i pieczywem pełnoziarnistym",
-    second_breakfast="Jogurt naturalny z migdałami i suszonymi figami",
-    lunch="Duszone mięso cielęce z ziemniakami i buraczkami",
-    snack="Mleko wzbogacone wapniem z bananem",
-    dinner="Sałatka z jajkiem, rukolą i pomidorem"
+    Tytuł="Dieta dla seniorów z osteoporozą",
+    Wiek="60-70",
+    Płeć="Kobieta",
+    Poziom_aktywności_fizycznej="Niska",
+    Preferencje="Tradycyjna, bogata w wapń",
+    Wykluczenia="Brak",
+    Inne_szczegóły="Wzmacnia kości i stawy",
+    Śniadanie="Twarożek z rzodkiewką, szczypiorkiem i pieczywem pełnoziarnistym",
+    Drugie_śniadanie="Jogurt naturalny z migdałami i suszonymi figami",
+    Obiad="Duszone mięso cielęce z ziemniakami i buraczkami",
+    Podwieczorek="Mleko wzbogacone wapniem z bananem",
+    Kolacja="Sałatka z jajkiem, rukolą i pomidorem"
 ),
 Diet(
-    name="Dieta na poprawę zdrowia skóry",
-    wiek="20-30",
-    gender="Kobieta",
-    activity_level="Umiarkowana",
-    preferences="Bogata w antyoksydanty i zdrowe tłuszcze",
-    exclusions="Cukier rafinowany",
-    other_details="Skupienie na promiennej i zdrowej cerze",
-    breakfast="Koktajl z awokado, szpinaku, ogórka i kiwi",
-    second_breakfast="Sałatka z rukoli, pomarańczy i orzechów włoskich",
-    lunch="Łosoś pieczony z puree z batatów i grillowanymi szparagami",
-    snack="Jogurt naturalny z miodem i nasionami chia",
-    dinner="Komosa ryżowa z granatem, szpinakiem i awokado"
+    Tytuł="Dieta na poprawę zdrowia skóry",
+    Wiek="20-30",
+    Płeć="Kobieta",
+    Poziom_aktywności_fizycznej="Umiarkowana",
+    Preferencje="Bogata w antyoksydanty i zdrowe tłuszcze",
+    Wykluczenia="Cukier rafinowany",
+    Inne_szczegóły="Skupienie na promiennej i zdrowej cerze",
+    Śniadanie="Koktajl z awokado, szpinaku, ogórka i kiwi",
+    Drugie_śniadanie="Sałatka z rukoli, pomarańczy i orzechów włoskich",
+    Obiad="Łosoś pieczony z puree z batatów i grillowanymi szparagami",
+    Podwieczorek="Jogurt naturalny z miodem i nasionami chia",
+    Kolacja="Komosa ryżowa z granatem, szpinakiem i awokado"
 ),
 Diet(
-    name="Dieta dla osób z celiakią",
-    wiek="20-50",
-    gender="Dowolna",
-    activity_level="Umiarkowana",
-    preferences="Bezglutenowa, zróżnicowana",
-    exclusions="Gluten",
-    other_details="Bogata w błonnik i zdrowe tłuszcze",
-    breakfast="Smoothie z mlekiem kokosowym, owocami jagodowymi i migdałami",
-    second_breakfast="Pieczone bataty z hummusem",
-    lunch="Curry z ciecierzycy, mleka kokosowego i warzyw z ryżem basmati",
-    snack="Orzechy włoskie i świeży ananas",
-    dinner="Pieczone warzywa korzeniowe z pesto z natki pietruszki"
+    Tytuł="Dieta dla osób z celiakią",
+    Wiek="20-50",
+    Płeć="Dowolna",
+    Poziom_aktywności_fizycznej="Umiarkowana",
+    Preferencje="Bezglutenowa, zróżnicowana",
+    Wykluczenia="Gluten",
+    Inne_szczegóły="Bogata w błonnik i zdrowe tłuszcze",
+    Śniadanie="Smoothie z mlekiem kokosowym, owocami jagodowymi i migdałami",
+    Drugie_śniadanie="Pieczone bataty z hummusem",
+    Obiad="Curry z ciecierzycy, mleka kokosowego i warzyw z ryżem basmati",
+    Podwieczorek="Orzechy włoskie i świeży ananas",
+    Kolacja="Pieczone warzywa korzeniowe z pesto z natki pietruszki"
 )
             ]
         if not Exercise.query.first():
             exercises = [
+
+
                 # Ćwiczenia w domu
-                Exercise(name="Push-Ups", category="home", body_part="Chest", difficulty="Beginner", description="A basic upper-body exercise.",image="static/images/pushups.jpg"),
-                Exercise(name="Plank", category="home", body_part="Core", difficulty="Intermediate", description="Strengthens your core muscles.",image="static/images/pushups.jpg"),
-                Exercise(name="Squats", category="home", body_part="Legs", difficulty="Beginner", description="Strengthens your legs and glutes.",image="static/images/pushups.jpg"),
-                Exercise(name="Lunges", category="home", body_part="Legs", difficulty="Intermediate", description="Targets quads and glutes.",image="static/images/pushups.jpg"),
-                Exercise(name="Glute Bridge", category="home", body_part="Glutes", difficulty="Beginner", description="Great for activating glutes.",image="static/images/pushups.jpg"),
-                Exercise(name="Burpees", category="home", body_part="Full Body", difficulty="Intermediate", description="High-intensity full-body exercise.",image="static/images/pushups.jpg"),
-                Exercise(name="Mountain Climbers", category="home", body_part="Core", difficulty="Intermediate", description="Cardio exercise targeting the core.",image="static/images/pushups.jpg"),
-                Exercise(name="Side Plank", category="home", body_part="Core", difficulty="Intermediate", description="Strengthens obliques.",image="static/images/pushups.jpg"),
-                Exercise(name="High Knees", category="home", body_part="Full Body", difficulty="Beginner", description="Cardio exercise for the legs.",image="static/images/pushups.jpg"),
-                Exercise(name="Jumping Jacks", category="home", body_part="Full Body", difficulty="Beginner", description="Full-body cardio warm-up.",image="static/images/pushups.jpg"),
-                Exercise(name="Wall Sit", category="home", body_part="Legs", difficulty="Intermediate", description="Strengthens quads and endurance.",image="static/images/pushups.jpg"),
-                Exercise(name="Chair Dips", category="home", body_part="Triceps", difficulty="Beginner", description="Targets triceps using a chair.",image="static/images/pushups.jpg"),
-                Exercise(name="Bicycle Crunches", category="home", body_part="Core", difficulty="Intermediate", description="Targets abs and obliques.",image="static/images/pushups.jpg"),
-                Exercise(name="Superman Exercise", category="home", body_part="Lower Back", difficulty="Beginner", description="Strengthens the lower back.",image="static/images/pushups.jpg"),
-                Exercise(name="Leg Raises", category="home", body_part="Core", difficulty="Intermediate", description="Targets the lower abs.",image="static/images/pushups.jpg"),
-                Exercise(name="Standing Calf Raises", category="home", body_part="Calves", difficulty="Beginner", description="Builds calf strength.",image="static/images/pushups.jpg"),
-                Exercise(name="Arm Circles", category="home", body_part="Shoulders", difficulty="Beginner", description="Warms up shoulder muscles.",image="static/images/pushups.jpg"),
-                Exercise(name="Step-Ups", category="home", body_part="Legs", difficulty="Intermediate", description="Great for legs and glutes.",image="static/images/pushups.jpg"),
-                Exercise(name="Bear Crawl", category="home", body_part="Full Body", difficulty="Intermediate", description="Full-body strength and cardio.",image="static/images/pushups.jpg"),
-                Exercise(name="Shadow Boxing", category="home", body_part="Arms", difficulty="Beginner", description="Cardio and arm exercise.",image="static/images/pushups.jpg"),
-                Exercise(name="Russian Twists", category="home", body_part="Core", difficulty="Intermediate", description="Works the obliques.",image="static/images/pushups.jpg"),
-                Exercise(name="Bird Dog", category="home", body_part="Core", difficulty="Beginner", description="Improves core stability.",image="static/images/pushups.jpg"),
-                Exercise(name="Hip Thrusts", category="home", body_part="Glutes", difficulty="Intermediate", description="Strengthens glutes and hamstrings.",image="static/images/pushups.jpg"),
-                Exercise(name="Side Lunges", category="home", body_part="Legs", difficulty="Intermediate", description="Targets inner thighs.",image="static/images/pushups.jpg"),
-                Exercise(name="Reverse Crunches", category="home", body_part="Core", difficulty="Intermediate", description="Targets lower abs.",image="static/images/pushups.jpg"),
+                Exercise(name="Pompki", category="home",body_part="Klatka piersiowa", difficulty="Początkujący", description="Podstawowe ćwiczenie górnych partii ciała.",image="static/images/push_ups.webp"),
+                Exercise(name="Deska", category="home", body_part="Core", difficulty="Średniozawansowany", description="Wzmacnia mięśnie brzucha.",image="static/images/plank.webp"),
+                Exercise(name="Przysiady", category="home", body_part="Nogi", difficulty="Początkujący", description="Wzmacnia nogi i pośladki..",image="static/images/squats.webp"),
+                Exercise(name="wykroki", category="home", body_part="Nogi", difficulty="Średniozawansowany", description="Skupia się na czworogłowych i pośladkach.",image="static/images/lunges.webp"),
+                Exercise(name="Mostek", category="home", body_part="Pośladki", difficulty="Początkujący", description="Idealne do aktywacji pośladków.",image="static/images/glutebridge.webp"),
+                Exercise(name="Burpees", category="home", body_part="Całe ciało", difficulty="Średniozawansowany", description="Wysoko intensywne ćwiczenie całego ciała.",image="static/images/Burpees.webp"),
+                Exercise(name="Wspinaczka", category="home", body_part="Core", difficulty="Średniozawansowany", description="Ćwiczenie cardio angażujące mięśnie brzucha.",image="static/images/Mountain Climbers.webp"),
+                Exercise(name="Boczna deska", category="home", body_part="Core", difficulty="Średniozawansowany", description="Strengthens obliques.",image="static/images/Side Plank.webp"),                        
+                Exercise(name="Wysokie kolana", category="home", body_part="Nogi", difficulty="Początkujący", description="Ćwiczenie cardio na nogi.",image="static/images/High Knees.webp"),
+                Exercise(name="Wysokie kolana", category="dom", body_part="Nogi", difficulty="Początkujący", description="Ćwiczenie cardio na nogi.", image="High Knees.webp"),
+                Exercise(name="Pajacyki", category="home", body_part="Całe ciało", difficulty="Początkujący", description="Rozgrzewka cardio całego ciała.",image="static/images/Jumping Jacks.webp"),
+                Exercise(name="Przysiad przy ścianie", category="home", body_part="Nogi", difficulty="Średniozawansowany", description="Wzmacnia mięśnie czworogłowe i wytrzymałość.",image="static/images/Wall Sit.webp"),
+                Exercise(name="Pompki na krześle", category="home", body_part="Triceps", difficulty="Początkujący", description="Celuje w triceps za pomocą krzesła.",image="static/images/Chair Dips.webp"),
+                Exercise(name="Brzuszki rowerowe", category="home", body_part="Core", difficulty="Średniozawansowany", description="Celuje w mięśnie brzucha i skośne.",image="static/images/Bicycle Crunches.webp"),
+                Exercise(name="Superman", category="home", body_part="dolna część pleców", difficulty="Początkujący", description="Wzmacnia dolną część pleców.",image="static/images/Superman Exercise.webp"),
+                Exercise(name="Unoszenie nóg", category="home", body_part="Core", difficulty="Średniozawansowany", description="Celuje w dolną część brzucha.",image="static/images/Leg Raises.webp"),
+                Exercise(name="Wspięcia na palce", category="home", body_part="Nogi", difficulty="Początkujący", description="Buduje siłę łydek.",image="static/images/Calf Raises.webp"), 
+                Exercise(name="Krążenie ramion", category="home", body_part="Barki", difficulty="Początkujący", description="Rozgrzewa mięśnie ramion.",image="static/images/Arm Circles.webp"),
+                Exercise(name="Wchodzenie na podwyższenie", category="home", body_part="Nogi", difficulty="Średniozawansowany", description="Świetny na nogi i pośladki.",image="static/images/arm circles.webp"),
+                Exercise(name="Pełzanie w pozycji niedźwiedzia", category="home", body_part="Całe ciało", difficulty="Średniozawansowany", description="Siła całego ciała i cardio.",image="static/images/Step-Ups.webp"),
+                Exercise(name="Boksowanie w powietrzu", category="home", body_part="Ręce", difficulty="Początkujący", description="Ćwiczenia cardio i ramion.",image="static/images/Shadow Boxing.webp"),
+                Exercise(name="Rosyjskie skręty tułowia", category="home", body_part="Core", difficulty="Średniozawansowany", description="Działa na mięśnie skośne.",image="static/images/Russian Twists.webp"),
+                Exercise(name="Ćwiczenie ptak-pies", category="home", body_part="Core", difficulty="Początkujący", description="Poprawia stabilność rdzenia.",image="static/images/Bird Dog.webp"),
+                Exercise(name="Unoszenie bioder w podporze", category="home", body_part="Pośladki", difficulty="Średniozawansowany", description="Wzmacnia pośladki i ścięgna podkolanowe.",image="static/images/Hip Thrusts.webp"),
+                Exercise(name="Wypady w bok", category="home", body_part="Nogi", difficulty="Średniozawansowany", description="Celuje w wewnętrzne uda.",image="static/images/Side Lunges.webp"),
+                Exercise(name="Odwrotne brzuszki", category="home", body_part="Core", difficulty="Średniozawansowany", description="Celuje w dolne mięśnie brzucha.",image="static/images/Reverse Crunches.webp"),
                 
                 # Ćwiczenia na siłowni
-                Exercise(name="Bench Press", category="gym", body_part="Chest", difficulty="Intermediate", description="A classic chest exercise.",image="static/images/pushups.jpg"),
-                Exercise(name="Deadlift", category="gym", body_part="Back", difficulty="Advanced", description="A compound exercise for the back.",image="static/images/pushups.jpg"),
-                Exercise(name="Pull-Ups", category="gym", body_part="Back", difficulty="Intermediate", description="Great for back and arm strength.",image="static/images/pushups.jpg"),
-                Exercise(name="Lat Pulldown", category="gym", body_part="Back", difficulty="Beginner", description="Targets the lats.",image="static/images/pushups.jpg"),
-                Exercise(name="Cable Rows", category="gym", body_part="Back", difficulty="Intermediate", description="Builds upper back strength.",image="static/images/pushups.jpg"),
-                Exercise(name="Barbell Squats", category="gym", body_part="Legs", difficulty="Intermediate", description="A compound leg exercise.",image="static/images/pushups.jpg"),
-                Exercise(name="Leg Press", category="gym", body_part="Legs", difficulty="Beginner", description="Builds leg strength.",image="static/images/pushups.jpg"),
-                Exercise(name="Dumbbell Lunges", category="gym", body_part="Legs", difficulty="Intermediate", description="Targets quads and glutes.",image="static/images/pushups.jpg"),
-                Exercise(name="Bicep Curls", category="gym", body_part="Arms", difficulty="Beginner", description="Strengthens the biceps.",image="static/images/pushups.jpg"),
-                Exercise(name="Tricep Extensions", category="gym", body_part="Arms", difficulty="Beginner", description="Targets the triceps.",image="static/images/pushups.jpg"),
-                Exercise(name="Dumbbell Shoulder Press", category="gym", body_part="Shoulders", difficulty="Intermediate", description="Builds shoulder strength.",image="static/images/pushups.jpg"),
-                Exercise(name="Arnold Press", category="gym", body_part="Shoulders", difficulty="Intermediate", description="A variation of shoulder press.",image="static/images/pushups.jpg"),
-                Exercise(name="Dumbbell Rows", category="gym", body_part="Back", difficulty="Intermediate", description="Strengthens back muscles.",image="static/images/pushups.jpg"),
-                Exercise(name="Incline Bench Press", category="gym", body_part="Chest", difficulty="Intermediate", description="Focuses on the upper chest.",image="static/images/pushups.jpg"),
-                Exercise(name="Chest Fly", category="gym", body_part="Chest", difficulty="Beginner", description="Isolates chest muscles.",image="static/images/pushups.jpg"),
-                Exercise(name="Leg Curl", category="gym", body_part="Hamstrings", difficulty="Beginner", description="Targets the hamstrings.",image="static/images/pushups.jpg"),
-                Exercise(name="Calf Raises", category="gym", body_part="Calves", difficulty="Beginner", description="Strengthens calf muscles.",image="static/images/pushups.jpg"),
-                Exercise(name="T-Bar Row", category="gym", body_part="Back", difficulty="Intermediate", description="Builds a strong back.",image="static/images/pushups.jpg"),
-                Exercise(name="Hack Squat", category="gym", body_part="Legs", difficulty="Intermediate", description="Targets quads.",image="static/images/pushups.jpg"),
-                Exercise(name="Romanian Deadlift", category="gym", body_part="Hamstrings", difficulty="Intermediate", description="Focuses on hamstrings.",image="static/images/pushups.jpg"),
-                Exercise(name="Seated Overhead Press", category="gym", body_part="Shoulders", difficulty="Intermediate", description="Strengthens shoulders.",image="static/images/pushups.jpg"),
-                Exercise(name="Dumbbell Chest Press", category="gym", body_part="Chest", difficulty="Beginner", description="Works the chest muscles.",image="static/images/pushups.jpg"),
-                Exercise(name="Dumbbell Shrugs", category="gym", body_part="Traps", difficulty="Beginner", description="Strengthens traps.",image="static/images/pushups.jpg"),
-                Exercise(name="Preacher Curl", category="gym", body_part="Arms", difficulty="Beginner", description="Isolates the biceps.",image="static/images/pushups.jpg"),
-                Exercise(name="Cable Lateral Raises", category="gym", body_part="Shoulders", difficulty="Intermediate", description="Works shoulder muscles.",image="static/images/pushups.jpg"),
+                Exercise(name="Wyciskanie sztangi na ławce", category="gym", body_part="Klatka piersiowa", difficulty="Średniozawanosowany", description="Klasyczne ćwiczenie na klatkę piersiową.",image="static/images/Bench Press.webp"),
+                Exercise(name="Martwy ciąg", category="gym", body_part="Plecy", difficulty="Zawansowany", description="Złożone ćwiczenie na plecy.",image="static/images/Deadlift.webp"),
+                Exercise(name="Podciąganie", category="gym", body_part="Plecy", difficulty="Średniozawansowany", description="Świetnie wzmacnia plecy i ramiona.",image="static/images/Pull-Ups.webp"),
+                Exercise(name="Ściąganie drążka", category="gym", body_part="Plecy", difficulty="Początkujący", description="Celuje w mięśnie naramienne.",image="static/images/Lat Pulldown.webp"),
+                Exercise(name="Wiosłowanie na wyciągu", category="gym", body_part="Plecy", difficulty="Średniozawansowany", description="Buduje siłę górnej części pleców.",image="static/images/Cable Rows.webp"),
+                Exercise(name="Przysiady ze sztangą", category="gym", body_part="Nogi", difficulty="Średniozawansowany", description="Złożone ćwiczenie nóg.",image="static/images/Barbell Squats.webp"),
+                Exercise(name="Wyciskanie nóg", category="gym", body_part="Nogi", difficulty="Początkujący", description="Buduje siłę nóg.",image="static/images/Leg Press.webp"),
+                Exercise(name="Wykroki z hantlami", category="gym", body_part="Nogi", difficulty="Średniozawansowany", description="Buduje siłę nóg.",image="static/images/Dumbbell Lunges.webp"),
+                Exercise(name="Uginanie przedramion", category="gym", body_part="Ramiona", difficulty="Początkujący", description="Wzmacnia biceps.",image="static/images/Bicep Curls.webp"),
+                Exercise(name="Wyciskanie trójgłowe", category="gym", body_part="Ramiona", difficulty="Początkujący", description="Celuje w triceps.",image="static/images/Tricep Extensions.webp"),
+                Exercise(name="Wyciskanie hantli na barki", category="gym", body_part="Barki", difficulty="Średniozawansowany", description="Buduje siłę ramion.",image="static/images/Dumbbell Dhoulder Press.webp"),
+                Exercise(name="Wyciskanie Arnolda", category="gym", body_part="Barki", difficulty="Średniozawansowany", description="Odmiana wyciskania na barki.",image="static/images/Arnold Press.webp"),
+                Exercise(name="Wiosłowanie hantlą", category="gym", body_part="Plecy", difficulty="Średniozawansowany", description="Wzmacnia mięśnie pleców.",image="static/images/Dumbbell Rows.webp"),
+                Exercise(name="Wyciskanie na ławce skośnej", category="gym", body_part="Klatka piersiowa", difficulty="Średniozawansowany", description="Koncentruje się na górnej części klatki piersiowej.",image="static/images/Incline Bench Press.webp"),
+                Exercise(name="Rozpiętki", category="gym", body_part="Klatka piersiowa", difficulty="Początkujący", description="Izoluje mięśnie klatki piersiowej.",image="static/images/chest fly.webp"),
+                Exercise(name="Uginanie nóg", category="gym", body_part="Mięśnie dwugłowe uda", difficulty="Początkujący", description="Celuje w ścięgna podkolanowe.",image="static/images/Leg Curl.webp"),
+                Exercise(name="Wspięcia na palce", category="gym", body_part="Łydki", difficulty="Początkujący", description="Wzmacnia mięśnie łydek.",image="static/images/Calf Raises.webp"),
+                Exercise(name="Wiosłowanie T-bar", category="gym", body_part="Plecy", difficulty="Średniozawansowany", description="Buduje silne plecy.",image="static/images/T-Bar Row.webp"),
+                Exercise(name="Przysiady na maszynie", category="gym", body_part="Nogi", difficulty="Średniozawansowany", description="Celuje w quady.",image="static/images/hacksquat.webp"),
+                Exercise(name="Martwy ciąg rumuński", category="gym", body_part="Mięśnie dwugłowe uda", difficulty="Średniozawansowany", description="Koncentruje się na ścięgnach podkolanowych.",image="static/images/Romanian Deadlift.webp"),
+                Exercise(name="Wyciskanie siedząc nad głową", category="gym", body_part="Barki", difficulty="Średniozawansowany", description="Wzmacnia ramiona.",image="static/images/Seated Overhead Press.webp"),
+                Exercise(name="Wyciskanie hantli na klatkę", category="gym", body_part="Klatka piersiowa", difficulty="Początkujący", description="Działa na mięśnie klatki piersiowej.",image="static/images/Dumbbell Chest Press.webp"),
+                Exercise(name="Wzruszanie ramionami z hantlami", category="gym", body_part="Czworoboczne", difficulty="Początkujący", description="Wzmacnia plecy",image="static/images/Dumbbell Shrugs.webp"),
+                Exercise(name="Uginanie przedramion na modlitewniku", category="gym", body_part="Ramiona", difficulty="Początkujący", description="Izoluje biceps.",image="static/images/Preacher Curl.webp"),
+                Exercise(name="Unoszenie bokiem na wyciągu", category="gym", body_part="Barki", difficulty="Średniozawansowany", description="Działa na mięśnie ramion.",image="static/images/Cable Lateral Raises.webp"),
                 
+            
+
+
             ]
             db.session.add_all(exercises)            
             db.session.add_all(diets)
             db.session.add_all(products)
             db.session.commit()
 app.run(debug=True)
-#do rejestracji dodac weryfikacje maila 
-#skoczyc podstrony w profilu
+
 #dodac zdjecia do produktow
-#dodac zdjecia do cwiczen
-#poprawic style

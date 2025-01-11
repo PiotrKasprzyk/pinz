@@ -6,44 +6,108 @@
 <h1>Add New Diet</h1>
 
 <form method="POST">
-    <label for="day_of_week">Day of Week:</label>
+    <label for="day_of_week">Dzień tygodnia:</label>
     <select name="day_of_week" id="day_of_week" required>
-        <option value="Monday">Monday</option>
-        <option value="Tuesday">Tuesday</option>
-        <option value="Wednesday">Wednesday</option>
-        <option value="Thursday">Thursday</option>
-        <option value="Friday">Friday</option>
-        <option value="Saturday">Saturday</option>
-        <option value="Sunday">Sunday</option>
+        <option value="Monday">Poniedziałek</option>
+        <option value="Tuesday">Wtorek</option>
+        <option value="Wednesday">Środa</option>
+        <option value="Thursday">Czwartek</option>
+        <option value="Friday">Piątek</option>
+        <option value="Saturday">Sobota</option>
+        <option value="Sunday">Niedziela</option>
     </select>
 
-    <label for="breakfast">Breakfast:</label>
+    <label for="breakfast">Śniadanie:</label>
     <input type="text" name="breakfast" id="breakfast" required>
-    <label for="breakfast_recipe">Breakfast Recipe:</label>
+    <label for="breakfast_recipe">Przepis:</label>
     <textarea name="breakfast_recipe" id="breakfast_recipe"></textarea>
 
-    <label for="second_breakfast">Second Breakfast:</label>
+    <label for="second_breakfast">Drugie śniadanie:</label>
     <input type="text" name="second_breakfast" id="second_breakfast">
-    <label for="second_breakfast_recipe">Second Breakfast Recipe:</label>
+    <label for="second_breakfast_recipe">Przepis:</label>
     <textarea name="second_breakfast_recipe" id="second_breakfast_recipe"></textarea>
 
-    <label for="lunch">Lunch:</label>
+    <label for="lunch">Obiad:</label>
     <input type="text" name="lunch" id="lunch" required>
-    <label for="lunch_recipe">Lunch Recipe:</label>
+    <label for="lunch_recipe">Przepis:</label>
     <textarea name="lunch_recipe" id="lunch_recipe"></textarea>
 
-    <label for="dinner">Dinner:</label>
+    <label for="dinner">Kolacja:</label>
     <input type="text" name="dinner" id="dinner" required>
-    <label for="dinner_recipe">Dinner Recipe:</label>
+    <label for="dinner_recipe">Przepis:</label>
     <textarea name="dinner_recipe" id="dinner_recipe"></textarea>
 
-    <label for="snack">Snack:</label>
+    <label for="snack">Podwieczorek:</label>
     <input type="text" name="snack" id="snack">
-    <label for="snack_recipe">Snack Recipe:</label>
+    <label for="snack_recipe">Przepis:</label>
     <textarea name="snack_recipe" id="snack_recipe"></textarea>
 
-    <button type="submit">Add Diet</button>
+    <button type="submit">Dodaj diete</button>
 </form>
+<style>
+    /* General form styling */
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-<a href="{{ url_for('profile_diets') }}" class="btn-back">Back to Diets</a>
+/* Label styling */
+form label {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+}
+
+/* Input and textarea styling */
+form input[type="text"],
+form input[type="date"],
+form input[type="number"],
+form input[type="file"],
+form textarea {
+    width: 100%;
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Textarea styling */
+form textarea {
+    resize: none;
+}
+
+/* Profile image display */
+form .profile-image {
+    margin-top: 10px;
+    max-width: 100px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Submit button styling */
+form .btn-save {
+    margin-top: 20px;
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form .btn-save:hover {
+    background-color: #0056b3;
+}
+</style>
+<a href="{{ url_for('profile_diets') }}" class="btn-back">Powrót</a>
 {% endblock %}

@@ -3,7 +3,7 @@
 {% block title %}Personal Details{% endblock %}
 
 {% block content %}
-<h1>My Profile</h1>
+
 
 <div class="profile-card">
     {% if user.profile_image %}
@@ -13,19 +13,19 @@
     {% endif %}
 
     <div class="profile-info">
-        <p><strong>First Name:</strong> {{ user.first_name or 'Not provided' }}</p>
-        <p><strong>Last Name:</strong> {{ user.last_name or 'Not provided' }}</p>
-        <p><strong>Date of Birth:</strong> {{ user.birth_date or 'Not provided' }}</p>
-        <p><strong>Age:</strong> {{ user.age or 'Not provided' }}</p>
-        <p><strong>Weight:</strong> {{ user.weight or 'Not provided' }} kg</p>
-        <p><strong>Height:</strong> {{ user.height or 'Not provided' }} cm</p>
-        <p><strong>Weight Goal:</strong> {{ user.weight_goal or 'Not provided' }} kg</p>
+        <p><strong>Imię:</strong> {{ user.first_name or 'Not provided' }}</p>
+        <p><strong>Nazwisko:</strong> {{ user.last_name or 'Not provided' }}</p>
+        <p><strong>Data urodzin:</strong> {{ user.birth_date or 'Not provided' }}</p>
+        <p><strong>Wiek:</strong> {{ user.age or 'Not provided' }}</p>
+        <p><strong>Waga:</strong> {{ user.weight or 'Not provided' }} kg</p>
+        <p><strong>Wzrost:</strong> {{ user.height or 'Not provided' }} cm</p>
+        <p><strong>Docelowa waga:</strong> {{ user.weight_goal or 'Not provided' }} kg</p>
         <p><strong>Bio:</strong> {{ user.bio or 'Not provided' }}</p>
-        <p><strong>Favorite Foods:</strong> {{ user.favorite_foods or 'Not provided' }}</p>
-        <p><strong>Favorite Products:</strong> {{ user.favorite_products or 'Not provided' }}</p>
+        <p><strong>Ulubione jedzenie:</strong> {{ user.favorite_foods or 'Not provided' }}</p>
+        <p><strong>Ulubione produkt spożywczy:</strong> {{ user.favorite_products or 'Not provided' }}</p>
     </div>
 
-    <a href="{{ url_for('edit_profile_details') }}" class="btn-edit">Edit</a><a href="{{ url_for('profile') }}" class="btn-back">Back to Profile</a>
+    <a href="{{ url_for('edit_profile_details') }}" class="btn-edit">Edytuj</a><a href="{{ url_for('profile') }}" class="btn-back">Powrót</a>
 
 </div>
 {% endblock %}

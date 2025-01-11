@@ -3,50 +3,114 @@
 {% block title %}Add Training Plan{% endblock %}
 
 {% block content %}
-<h1>Add Training Plan</h1>
+
 <form method="POST" action="/profile/training-plan/add">
-    <label for="day_of_week">Day of the Week:</label>
+    <label for="day_of_week">Dzień tygodnia:</label>
     <select name="day_of_week" required>
-        <option value="Monday">Monday</option>
-        <option value="Tuesday">Tuesday</option>
-        <option value="Wednesday">Wednesday</option>
-        <option value="Thursday">Thursday</option>
-        <option value="Friday">Friday</option>
-        <option value="Saturday">Saturday</option>
-        <option value="Sunday">Sunday</option>
+        <option value="Monday">Poniedziałek</option>
+        <option value="Tuesday">Wtorek</option>
+        <option value="Wednesday">Środa</option>
+        <option value="Thursday">Czwartek</option>
+        <option value="Friday">Piątek</option>
+        <option value="Saturday">Sobota</option>
+        <option value="Sunday">Niedziela</option>
     </select>
 
-    <label for="start_time">Start Time:</label>
+    <label for="start_time">Czas rozpoczęcia:</label>
     <input type="time" name="start_time" required>
 
-    <label for="end_time">End Time:</label>
+    <label for="end_time">Czas zakończenia:</label>
     <input type="time" name="end_time" required>
 
-    <h3>Exercises</h3>
+    <h3>Ćwiczenie</h3>
     <div id="exercise-container">
         <div class="exercise-group">
-            <label for="category">Category:</label>
+            <label for="category">Kategoria:</label>
             <input type="text" name="category[]" placeholder="Category" required>
 
-            <label for="exercise">Exercise:</label>
+            <label for="exercise">Ćwiczenie:</label>
             <input type="text" name="exercise[]" placeholder="Exercise" required>
 
-            <label for="sets">Sets:</label>
+            <label for="sets">Serie:</label>
             <input type="number" name="sets[]" placeholder="Sets" required>
 
-            <label for="reps">Reps:</label>
+            <label for="reps">Powtórzenia:</label>
             <input type="text" name="reps[]" placeholder="Reps" required>
         </div>
     </div>
 
-    <button type="button" id="add-exercise-btn">Add Exercise</button>
+    <button type="button" id="add-exercise-btn">Dodaj ćwiczenie</button>
 
-    <label for="notes">Notes:</label>
+    <label for="notes">Notatki:</label>
     <textarea name="notes" rows="3"></textarea>
 
-    <button type="submit">Save Plan</button>
+    <button type="submit">Zapisz</button>
 </form>
+<style>
+    /* General form styling */
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
+/* Label styling */
+form label {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+}
+
+/* Input and textarea styling */
+form input[type="text"],
+form input[type="date"],
+form input[type="number"],
+form input[type="file"],
+form textarea {
+    width: 100%;
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Textarea styling */
+form textarea {
+    resize: none;
+}
+
+/* Profile image display */
+form .profile-image {
+    margin-top: 10px;
+    max-width: 100px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Submit button styling */
+form .btn-save {
+    margin-top: 20px;
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form .btn-save:hover {
+    background-color: #0056b3;
+}
+</style>
 <script>
     document.getElementById('add-exercise-btn').addEventListener('click', function() {
         const container = document.getElementById('exercise-container');

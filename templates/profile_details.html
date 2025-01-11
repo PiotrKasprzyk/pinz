@@ -15,22 +15,22 @@
 
     <!-- Formularz danych -->
     <form method="POST" enctype="multipart/form-data">
-        <label for="first_name">First Name:</label>
+        <label for="first_name">Imię:</label>
         <input type="text" name="first_name" id="first_name" value="{{ user.first_name or '' }}" required>
 
-        <label for="last_name">Last Name:</label>
+        <label for="last_name">Nazwisko:</label>
         <input type="text" name="last_name" id="last_name" value="{{ user.last_name or '' }}" required>
 
-        <label for="age">Age:</label>
+        <label for="age">Wiek:</label>
         <input type="number" name="age" id="age" value="{{ user.age or '' }}" required>
 
         <label for="bio">Bio:</label>
         <textarea name="bio" id="bio" rows="4">{{ user.bio or '' }}</textarea>
 
-        <label for="profile_image">Profile Image:</label>
+        <label for="profile_image">Zdjęcie profilowe:</label>
         <input type="file" name="profile_image" id="profile_image">
 
-        <button type="submit" class="btn-save">Save Changes</button>
+        <button type="submit" class="btn-save">Zapisz zmiany</button>
     </form>
 </div>
 {% endblock %}

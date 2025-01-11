@@ -3,15 +3,15 @@
 {% block title %}Opinions{% endblock %}
 
 {% block content %}
-<h1>Opinions</h1>
+<h1>Opinie</h1>
 
 <!-- Ogólna ocena aplikacji -->
 <div>
-    <h2>Average Rating: 
+    <h2>Średnia ocena aplikacji: 
         {% if average_rating %}
             {{ average_rating }} / 5
         {% else %}
-            No ratings yet
+            Brak ocen
         {% endif %}
     </h2>
 </div>
@@ -20,7 +20,7 @@
 
 <!-- Formularz dodawania opinii -->
 {% if current_user.is_authenticated %}
-<h3>Leave Your Review</h3>
+<h3>Zostaw opinie o aplikacji</h3>
 <form method="POST" action="/opinions">
     <textarea name="content" rows="3" placeholder="Write your opinion here..." required></textarea>
     <div class="rating">
@@ -35,17 +35,17 @@
         <input type="radio" id="star1" name="rating" value="1">
         <label for="star1" title="1 star">★</label>
     </div>
-    <button type="submit">Submit</button>
+    <button type="submit">Zatwierdzi</button>
 </form>
 
 {% else %}
-<p>You need to <a href="/login">log in</a> to leave a review.</p>
+<p>Musisz być <a href="/login">zalogowany</a> aby zostawić opinie.</p>
 {% endif %}
 
 <hr>
 
 <!-- Wyświetlanie opinii -->
-<h3>User Reviews</h3>
+<h3>Opinie użytkowników:</h3>
 {% for review in reviews %}
 <div class="review">
     <p><strong>User {{ review.user_id }}:</strong> {{ review.content }}</p>
@@ -58,7 +58,7 @@
             {% endif %}
         {% endfor %}
     </p>
-    <p><small>Posted on {{ review.created_at }}</small></p>
+    <p><small>Opublikowano przez{{ review.created_at }}</small></p>
 </div>
 <hr>
 {% endfor %}

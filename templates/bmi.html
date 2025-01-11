@@ -14,7 +14,7 @@
             <label for="height">Wzrost (cm):</label>
             <input type="number" id="height" name="height" step="0.1" required>
             <br>
-            <button type="submit">Oblicz BMI</button>
+            <button type="submit" class="btn glass">Oblicz BMI</button>
         </form>
 
         {% if bmi_value is not none %}
@@ -47,5 +47,31 @@
             <li><strong>BMI ≥ 30:</strong> Otyłość</li>
         </ul>
     </div>
+</div>
+
+<div>
+    <h2>Co to jest BMI?</h2>
+    <p>Wskaźnik masy ciała (ang. Body Mass Index, BMI) to prosta miara oceny masy ciała osoby dorosłej. Jest to wartość liczbową obliczaną na podstawie wzrostu i masy ciała. BMI pozwala na ocenę, czy waga jest prawidłowa, czy też może występuje niedowaga, nadwaga czy otyłość.</p>
+</div>
+<div>
+       <h2>Jak obliczyć BMI?</h2>
+        <p>Wskaźnik BMI oblicza się dzieląc masę ciała w kilogramach przez wzrost w metrach podniesiony do kwadratu. Wzór na BMI wygląda następująco:</p>
+        <p style="text-align: center; font-size: 20px;">BMI = masa ciała [kg] / (wzrost [m])<sup>2</sup></p>
+        <p>Na przykład, dla osoby ważącej 70 kg i mającej 170 cm wzrostu obliczamy BMI w następujący sposób:</p>
+        <p style="text-align: center; font-size: 20px;">BMI = 70 / (1.7)<sup>2</sup> = 24.22</p>  
+</div>
+<div>
+    <h2>Co oznacza wynik BMI?</h2>
+    <p>Na podstawie wartości BMI można określić kategorię masy ciała. Poniżej przedstawiamy interpretację wyników BMI:</p>
+    <ul>
+        <li><strong>BMI &lt; 18.5:</strong> Niedowaga</li>
+        <li><strong>18.5 ≤ BMI &lt; 24.9:</strong> Waga prawidłowa</li>
+        <li><strong>25 ≤ BMI &lt; 29.9:</strong> Nadwaga</li>
+        <li><strong>BMI ≥ 30:</strong> Otyłość</li>
+    </ul>
+</div>
+<div>
+    <h2>Uwagi</h2>
+    <p>Wskaźnik BMI jest przydatny w ocenie masy ciała, ale nie uwzględnia innych czynników, takich jak wiek, płeć, czy ilość tkanki mięśniowej. Dlatego warto skonsultować się z lekarzem w celu uzyskania pełniejszej oceny swojego stanu zdrowia.</p>
 </div>
 {% endblock %}

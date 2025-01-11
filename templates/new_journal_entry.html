@@ -3,51 +3,124 @@
 {% block title %}Add Journal Entry{% endblock %}
 
 {% block content %}
-<h1>Add Journal Entry</h1>
+
 <form method="POST" action="/profile/journal/new" enctype="multipart/form-data">
-    <label for="date">Date:</label>
+    <label for="date">Data:</label>
     <input type="date" id="date" name="date" required>
 
-    <label for="day_of_week">Day of the Week:</label>
-    <input type="text" id="day_of_week" name="day_of_week" required>
+    <label for="day_of_week">Dzień tygodnia:</label>
+    <select name="day_of_week" id="day_of_week" required>
+        <option value="Monday">Poniedziałek</option>
+        <option value="Tuesday">Wtorek</option>
+        <option value="Wednesday">Środa</option>
+        <option value="Thursday">Czwartek</option>
+        <option value="Friday">Piątek</option>
+        <option value="Saturday">Sobota</option>
+        <option value="Sunday">Niedziela</option>
+    </select>
 
-    <label for="breakfast">Breakfast:</label>
+    <label for="breakfast">Śniadanie:</label>
     <textarea id="breakfast" name="breakfast"></textarea>
 
-    <label for="second_breakfast">Second Breakfast:</label>
+    <label for="second_breakfast">Drugie śniadanie:</label>
     <textarea id="second_breakfast" name="second_breakfast"></textarea>
 
-    <label for="lunch">Lunch:</label>
+    <label for="lunch">Obiad:</label>
     <textarea id="lunch" name="lunch"></textarea>
 
-    <label for="dinner">Dinner:</label>
+    <label for="dinner">Kolacja:</label>
     <textarea id="dinner" name="dinner"></textarea>
 
-    <label for="snack">Snack:</label>
+    <label for="snack">Podwieczorek:</label>
     <textarea id="snack" name="snack"></textarea>
 
-    <h3>Workout</h3>
+    <h3>Trening</h3>
     <div id="exercise-container">
         <div class="exercise-group">
-            <label for="workout_type_0">Workout Type:</label>
+            <label for="workout_type_0">Rodzaje treningu:</label>
             <input type="text" id="workout_type_0" name="workout_type[]" required>
 
-            <label for="workout_reps_0">Reps:</label>
+            <label for="workout_reps_0">Powtórzenie:</label>
             <input type="text" id="workout_reps_0" name="workout_reps[]" required>
 
-            <label for="workout_notes_0">Notes:</label>
+            <label for="workout_notes_0">Notatki:</label>
             <textarea id="workout_notes_0" name="workout_notes[]"></textarea>
         </div>
     </div>
 
-    <button type="button" id="add-exercise" class="btn-add">Add Exercise</button>
+    <button type="button" id="add-exercise" class="btn-add">Dodaj ćwiczenie</button>
 
-    <label for="conclusions">Conclusions:</label>
+    <label for="conclusions">Wnioski:</label>
     <textarea id="conclusions" name="conclusions"></textarea>
 
-    <button type="submit" class="btn-submit">Submit</button>
+    <button type="submit" class="btn-submit">Zatwierdzi</button>
 </form>
+<style>
+    /* General form styling */
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: rgb(141, 4, 253);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-color:black;
+}
 
+/* Label styling */
+form label {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+}
+
+/* Input and textarea styling */
+form input[type="text"],
+form input[type="date"],
+form input[type="number"],
+form input[type="file"],
+form textarea {
+    width: 100%;
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Textarea styling */
+form textarea {
+    resize: none;
+}
+
+/* Profile image display */
+form .profile-image {
+    margin-top: 10px;
+    max-width: 100px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgb(132, 0, 255);
+}
+
+/* Submit button styling */
+form .btn-save {
+    margin-top: 20px;
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #fff;
+    background-color:rgb(29, 4, 253);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form .btn-save:hover {
+    background-color:rgb(29, 4, 253);
+}
+</style>
 <script>
     let exerciseCount = 1;
     document.getElementById('add-exercise').addEventListener('click', function () {

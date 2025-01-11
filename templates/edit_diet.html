@@ -6,39 +6,112 @@
 <h1>Edit Diet</h1>
 
 <form method="POST" enctype="multipart/form-data">
-    <label for="day_of_week">Day of Week:</label>
-    <input type="text" id="day_of_week" name="day_of_week" value="{{ diet.day_of_week }}" required>
-
-    <label for="breakfast">Breakfast:</label>
+        <label for="day_of_week">Dzień tygodnia:</label>
+        <select name="day_of_week" id="day_of_week" required>
+            <option value="Monday">Poniedziałek</option>
+            <option value="Tuesday">Wtorek</option>
+            <option value="Wednesday">Środa</option>
+            <option value="Thursday">Czwartek</option>
+            <option value="Friday">Piątek</option>
+            <option value="Saturday">Sobota</option>
+            <option value="Sunday">Niedziela</option>
+        </select>
+    <label for="breakfast">Śniadanie:</label>
     <input type="text" id="breakfast" name="breakfast" value="{{ diet.breakfast }}" required>
 
-    <label for="breakfast_recipe">Breakfast Recipe:</label>
+    <label for="breakfast_recipe">Przepis:</label>
     <textarea id="breakfast_recipe" name="breakfast_recipe">{{ diet.breakfast_recipe[0].details if diet.breakfast_recipe }}</textarea>
 
-    <label for="second_breakfast">Second Breakfast:</label>
+    <label for="second_breakfast">Drugie śniadanie:</label>
     <input type="text" id="second_breakfast" name="second_breakfast" value="{{ diet.second_breakfast }}" required>
 
-    <label for="second_breakfast_recipe">Second Breakfast Recipe:</label>
+    <label for="second_breakfast_recipe">Przepis:</label>
     <textarea id="second_breakfast_recipe" name="second_breakfast_recipe">{{ diet.second_breakfast_recipe[0].details if diet.second_breakfast_recipe }}</textarea>
 
-    <label for="lunch">Lunch:</label>
+    <label for="lunch">Obiad:</label>
     <input type="text" id="lunch" name="lunch" value="{{ diet.lunch }}" required>
 
-    <label for="lunch_recipe">Lunch Recipe:</label>
+    <label for="lunch_recipe">Przepis:</label>
     <textarea id="lunch_recipe" name="lunch_recipe">{{ diet.lunch_recipe[0].details if diet.lunch_recipe }}</textarea>
 
-    <label for="dinner">Dinner:</label>
+    <label for="dinner">Kolacja:</label>
     <input type="text" id="dinner" name="dinner" value="{{ diet.dinner }}" required>
 
-    <label for="dinner_recipe">Dinner Recipe:</label>
+    <label for="dinner_recipe">Przepis:</label>
     <textarea id="dinner_recipe" name="dinner_recipe">{{ diet.dinner_recipe[0].details if diet.dinner_recipe }}</textarea>
 
-    <label for="snack">Snack:</label>
+    <label for="snack">Podwieczorek:</label>
     <input type="text" id="snack" name="snack" value="{{ diet.snack }}" required>
 
-    <label for="snack_recipe">Snack Recipe:</label>
+    <label for="snack_recipe">Przepis:</label>
     <textarea id="snack_recipe" name="snack_recipe">{{ diet.snack_recipe[0].details if diet.snack_recipe }}</textarea>
 
-    <button type="submit" class="btn-submit">Save Changes</button>
+    <button type="submit" class="btn-submit">Zapisz zmainny</button>
 </form>
+<style>
+    /* General form styling */
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: rgb(141, 4, 253);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-color:black;
+}
+
+/* Label styling */
+form label {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+}
+
+/* Input and textarea styling */
+form input[type="text"],
+form input[type="date"],
+form input[type="number"],
+form input[type="file"],
+form textarea {
+    width: 100%;
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Textarea styling */
+form textarea {
+    resize: none;
+}
+
+/* Profile image display */
+form .profile-image {
+    margin-top: 10px;
+    max-width: 100px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgb(132, 0, 255);
+}
+
+/* Submit button styling */
+form .btn-save {
+    margin-top: 20px;
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #fff;
+    background-color:rgb(29, 4, 253);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form .btn-save:hover {
+    background-color:rgb(29, 4, 253);
+}
+</style>
 {% endblock %}

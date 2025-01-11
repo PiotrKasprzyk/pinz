@@ -10,23 +10,23 @@
         <div class="form-group">
             <label for="day_of_week">Day of Week:</label>
             <select name="day_of_week" id="day_of_week" class="form-control">
-                <option value="Monday" {% if plan.day_of_week == 'Monday' %}selected{% endif %}>Monday</option>
-                <option value="Tuesday" {% if plan.day_of_week == 'Tuesday' %}selected{% endif %}>Tuesday</option>
-                <option value="Wednesday" {% if plan.day_of_week == 'Wednesday' %}selected{% endif %}>Wednesday</option>
-                <option value="Thursday" {% if plan.day_of_week == 'Thursday' %}selected{% endif %}>Thursday</option>
-                <option value="Friday" {% if plan.day_of_week == 'Friday' %}selected{% endif %}>Friday</option>
-                <option value="Saturday" {% if plan.day_of_week == 'Saturday' %}selected{% endif %}>Saturday</option>
-                <option value="Sunday" {% if plan.day_of_week == 'Sunday' %}selected{% endif %}>Sunday</option>
+                <option value="Monday" {% if plan.day_of_week == 'Monday' %}selected{% endif %}>Poniedziałek</option>
+                <option value="Tuesday" {% if plan.day_of_week == 'Tuesday' %}selected{% endif %}>Wtorek</option>
+                <option value="Wednesday" {% if plan.day_of_week == 'Wednesday' %}selected{% endif %}>Środa</option>
+                <option value="Thursday" {% if plan.day_of_week == 'Thursday' %}selected{% endif %}>Czwartek</option>
+                <option value="Friday" {% if plan.day_of_week == 'Friday' %}selected{% endif %}>Piątek</option>
+                <option value="Saturday" {% if plan.day_of_week == 'Saturday' %}selected{% endif %}>Sobota</option>
+                <option value="Sunday" {% if plan.day_of_week == 'Sunday' %}selected{% endif %}>Niedziela</option>
             </select>
         </div>
     
         <div class="form-row">
             <div class="form-group col-md-6">
-                <label for="start_time">Start Time:</label>
+                <label for="start_time">Początek:</label>
                 <input type="time" name="start_time" id="start_time" class="form-control" value="{{ plan.start_time }}">
             </div>
             <div class="form-group col-md-6">
-                <label for="end_time">End Time:</label>
+                <label for="end_time">Koniec:</label>
                 <input type="time" name="end_time" id="end_time" class="form-control" value="{{ plan.end_time }}">
             </div>
         </div>
@@ -63,4 +63,69 @@
     
     
 </div>
+<style>
+    /* General form styling */
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Label styling */
+form label {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+}
+
+/* Input and textarea styling */
+form input[type="text"],
+form input[type="date"],
+form input[type="number"],
+form input[type="file"],
+form textarea {
+    width: 100%;
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Textarea styling */
+form textarea {
+    resize: none;
+}
+
+/* Profile image display */
+form .profile-image {
+    margin-top: 10px;
+    max-width: 100px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Submit button styling */
+form .btn-save {
+    margin-top: 20px;
+    padding: 10px 15px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form .btn-save:hover {
+    background-color: #0056b3;
+}
+</style>
 {% endblock %}
