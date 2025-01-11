@@ -2012,10 +2012,3 @@ Diet(
             db.session.add_all(products)
             db.session.commit()
 app.run(debug=True)
-
-#dodac zdjecia do produktow
-<<<<<<< HEAD
-=======
-#dodac zdjecia do cwiczen
-#poprawic style debug=true
->>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
