@@ -5,7 +5,7 @@
 {% block content %}
 <h1 class="text-center">Achievements</h1>
 
-<!-- Filtr kategorii -->
+
 <form method="GET" action="{{ url_for('achievements') }}" class="filter-form">
     <label for="category">Filtracja po kategorii:</label>
     <select name="category" id="category" onchange="this.form.submit()">
@@ -18,7 +18,7 @@
     </select>
 </form>
 
-<!-- Lista osiągnięć -->
+
 <div class="achievements-container">
     {% for achievement in achievements %}
     <pre>{{ achievement.__dict__ }}</pre>
@@ -27,13 +27,8 @@
         <img src="{{ url_for('static', filename=achievement.icon) }}" alt="{{ achievement.title }}" class="achievement-icon">
         <h3 class="achievement-title">{{ achievement.title }}</h3>
         <p class="achievement-description">{{ achievement.description }}</p>
-<<<<<<< HEAD
         <p class="achievement-category">Kategoria: {{ achievement.category }}</p>
         <p class="achievement-date">Otrzymana za: {{ achievement.created_at }}</p>
-=======
-        <p class="achievement-category">Category: {{ achievement.category }}</p>
-        <p class="achievement-date">Achieved on: {{ achievement.created_at }}</p>
->>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
     </div>
    </div>
     {% else %}

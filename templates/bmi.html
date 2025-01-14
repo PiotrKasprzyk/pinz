@@ -18,12 +18,12 @@
         </form>
 
         {% if bmi_value is not none %}
-            <h2>Twoje BMI: {{ bmi_value }}</h2>
-            <p>Kategoria: <strong>{{ category }}</strong></p>
+            <h2 id="bmi-result">Twoje BMI: {{ bmi_value }}</h2>
+            <p  id="bmi-category">Kategoria: <strong>{{ category }}</strong></p>
         {% endif %}
     </div>
 
-    <!-- Sekcja przedziałki i legendy -->
+    
     <div style="flex: 2; margin-left: 20px; padding: 10px;">
         <h3>Przedział BMI</h3>
         <div style="position: relative; width: 100%; height: 50px; background: linear-gradient(to right, green, yellow, red); margin: 20px 0; border-radius: 5px;">

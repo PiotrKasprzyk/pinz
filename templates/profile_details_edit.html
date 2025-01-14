@@ -3,7 +3,7 @@
 {% block title %}Edit Personal Details{% endblock %}
 
 {% block content %}
-<h1>Edit Personal Details</h1>
+
 
 <form method="POST" enctype="multipart/form-data">
     <label for="first_name">Imię:</label>
@@ -44,7 +44,7 @@
     <img src="{{ url_for('static', filename=user.profile_image) }}" alt="Profile Image" class="profile-image">
     {% endif %}
 
-    <button type="submit" class="btn-save">Zapisz zmiany</button>
+    <button type="submit" class="btn glass">Zapisz zmiany</button>
 </form>
 <style>
     /* General form styling */
@@ -53,7 +53,7 @@ form {
     flex-direction: column;
     max-width: 400px;
     margin: 0 auto;
-    background-color: #f9f9f9;
+    background-color: rgba(45, 2, 85, 0.87);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

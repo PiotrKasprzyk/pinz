@@ -5,7 +5,6 @@
 {% block content %}
 <h1>Opinie</h1>
 
-<!-- Ogólna ocena aplikacji -->
 <div>
     <h2>Średnia ocena aplikacji: 
         {% if average_rating %}
@@ -18,19 +17,10 @@
 
 <hr>
 
-<!-- Formularz dodawania opinii -->
 {% if current_user.is_authenticated %}
-<<<<<<< HEAD
 <h3>Zostaw opinie o aplikacji</h3>
-=======
-<h3>Leave Your Review</h3>
-<form method="POST" action="/opinions">    
-    <textarea name="content" rows="3" class="textarea textarea-primary" placeholder="Write your opinion here..." required></textarea>  
-    <button type="submit">Submit</button>
-</form>
-<h3>Ocena(1-5):</h3>
->>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
 <form method="POST" action="/opinions">
+    <textarea name="content" rows="3" placeholder="Write your opinion here..." required></textarea>
     <div class="rating">
         <input type="radio" id="star5" name="rating" value="5" required>
         <label for="star5" title="5 stars">★</label>
@@ -43,21 +33,15 @@
         <input type="radio" id="star1" name="rating" value="1">
         <label for="star1" title="1 star">★</label>
     </div>
-<<<<<<< HEAD
-    <button type="submit">Zatwierdzi</button>
+    <button type="submit" class="btn glass">Zatwierdzi</button>
 </form>
 
-=======
-    </form>
-    
->>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
 {% else %}
 <p>Musisz być <a href="/login">zalogowany</a> aby zostawić opinie.</p>
 {% endif %}
 
 <hr>
 
-<!-- Wyświetlanie opinii -->
 <h3>Opinie użytkowników:</h3>
 {% for review in reviews %}
 <div class="review">

@@ -46,15 +46,14 @@
         </select>
     </div>
     <div class="filter-row">
-        <button type="submit">Filter</button>
-        <a href="/products" class="reset-button">Reset</a>
+        <button type="submit" class="btn glass">Filtruj</button>
+        <a href="/products" class="btn glass">Resetuj</a>
     </div>
 </form>
 
 
 <hr>
 
-<!-- Kafelki produktów -->
 <div class="product-cards" >
     {% for product in products %}
     <div class="card bg-base-100 image-full w-96 shadow-xl" >
@@ -73,7 +72,6 @@
         <p><strong>Tłuszcze:</strong> {{ product.fats }}g (saturated: {{ product.saturated_fats }}g)</p>
         <p><strong>Sól:</strong> {{ product.salt }}g</p>
         <p><strong>Wynik zdrowia:</strong> {{ product.health_score }}</p>
-    </div>
     </div>
     </div>
     {% endfor %}

@@ -95,10 +95,10 @@ def login():
             flash('Please verify your email before logging in.', 'danger')
         elif check_password_hash(user.password, password):
             login_user(user)
-            flash('Logged in successfully!', 'success')
+            flash('Zalogowano pomyślnie!', 'success')
             return redirect(url_for('home'))
         else:
-            flash('Invalid email or password.', 'danger')
+            flash('Nieprawidłowe hasło lub email', 'danger')
 
     return render_template('login.html')
 
@@ -1176,15 +1176,15 @@ def edit_training_plan(plan_id):
 @app.route('/profile/achievements')
 @login_required
 def achievements():
-    category = request.args.get('category')  # Pobierz kategorię z parametru GET
+    category = request.args.get('category') 
     query = Achievement.query.filter_by(user_id=current_user.id)
     
-    if category:  # Filtrowanie po kategorii
+    if category:  
         query = query.filter_by(category=category)
 
     user_achievements = query.all()
     categories = Achievement.query.with_entities(Achievement.category).distinct().all()
-    categories = [c[0] for c in categories]  # Lista unikalnych kategorii
+    categories = [c[0] for c in categories]  
     test_achievements = [
         {
             'title': 'Profile Complete',
@@ -1197,7 +1197,7 @@ def achievements():
             'title': 'First Journal Entry',
             'description': 'You added your first journal entry!',
             'category': 'Journal',
-            'icon': 'icons/first_journal.png',
+            'icon': 'icons/journal.webp',
             'created_at': datetime.utcnow()
         }
     ]
@@ -1749,7 +1749,12 @@ def delete_diet(diet_id):
     flash('Diet deleted successfully!', 'success')
     return redirect(url_for('my_diets'))
 
-
+@app.route('/cookie-policy')
+def cookie_policy():
+    return render_template('cookie_policy.html')
+@app.route('/privacy-policy')
+def privacy_policy():
+    return render_template('privacy_policy.html')
 
 @app.route("/bmi", methods=["GET", "POST"])
 def bmi():
@@ -1769,7 +1774,7 @@ def bmi():
             category = "Nadwaga"
         else:
             category = "Otyłość"
-
+    
     return render_template("bmi.html", bmi_value=bmi_value, category=category)
 
 if __name__ == '__main__':
@@ -1777,30 +1782,69 @@ if __name__ == '__main__':
         
         if not Product.query.first():
             products = [
-                Product(name="Broccoli", category="Vegetables", proteins=2.8, carbs=7.0, sugars=1.7, fats=0.4, saturated_fats=0.1, salt=0.02, health_score=9.8,image="static/images/almonds.jpg"),
-                Product(name="Chicken Breast", category="Meat", proteins=31.0, carbs=0.0, sugars=0.0, fats=3.6, saturated_fats=1.0, salt=0.1, health_score=9.5,image="static/images/almonds.jpg"),
-                Product(name="Almonds", category="Nuts", proteins=21.0, carbs=22.0, sugars=4.4, fats=49.0, saturated_fats=3.8, salt=0.0, health_score=8.7,image="static/images/almonds.jpg"),
-                Product(name="Banana", category="Fruits", proteins=1.3, carbs=27.0, sugars=14.4, fats=0.3, saturated_fats=0.1, salt=0.01, health_score=8.0,image="static/images/almonds.jpg"),
-                Product(name="Whole Grain Bread", category="Grains", proteins=12.0, carbs=48.0, sugars=5.0, fats=3.0, saturated_fats=0.5, salt=1.2, health_score=7.5,image="static/images/almonds.jpg"),
-                Product(name="Carrots", category="Vegetables", proteins=0.9, carbs=10.0, sugars=4.7, fats=0.2, saturated_fats=0.0, salt=0.05, health_score=8.5,image="static/images/almonds.jpg"),
-                Product(name="Walnuts", category="Nuts", proteins=15.0, carbs=14.0, sugars=2.6, fats=65.0, saturated_fats=6.1, salt=0.0, health_score=8.7,image="static/images/almonds.jpg"),
-                Product(name="Tomatoes", category="Vegetables", proteins=0.9, carbs=3.9, sugars=2.6, fats=0.2, saturated_fats=0.0, salt=0.02, health_score=9.0,image="static/images/almonds.jpg"),
-                Product(name="Salmon", category="Fish", proteins=25.4, carbs=0.0, sugars=0.0, fats=13.4, saturated_fats=3.1, salt=0.2, health_score=9.7,image="static/images/almonds.jpg"),
-                Product(name="Cucumber", category="Vegetables", proteins=0.6, carbs=3.6, sugars=1.7, fats=0.1, saturated_fats=0.0, salt=0.01, health_score=9.0,image="static/images/almonds.jpg"),
-                Product(name="Lentils", category="Legumes", proteins=25.8, carbs=60.1, sugars=2.0, fats=1.0, saturated_fats=0.2, salt=0.02, health_score=8.9,image="static/images/almonds.jpg"),
-                Product(name="Peanuts", category="Nuts", proteins=25.8, carbs=16.1, sugars=4.2, fats=49.2, saturated_fats=6.8, salt=0.0, health_score=8.5,image="static/images/almonds.jpg"),
-                Product(name="Orange", category="Fruits", proteins=0.9, carbs=12.0, sugars=9.2, fats=0.1, saturated_fats=0.0, salt=0.0, health_score=8.7,image="static/images/almonds.jpg"),
-                Product(name="Raspberries", category="Fruits", proteins=1.2, carbs=11.9, sugars=4.4, fats=0.7, saturated_fats=0.0, salt=0.01, health_score=9.2,image="static/images/almonds.jpg"),
-                Product(name="Yogurt", category="Dairy", proteins=10.0, carbs=4.0, sugars=4.0, fats=5.0, saturated_fats=3.1, salt=0.1, health_score=8.3,image="static/images/almonds.jpg"),
-                Product(name="Cheese", category="Dairy", proteins=25.0, carbs=1.3, sugars=0.5, fats=33.0, saturated_fats=21.0, salt=2.0, health_score=7.5,image="static/images/almonds.jpg"),
-                Product(name="Beef Steak", category="Meat", proteins=29.0, carbs=0.0, sugars=0.0, fats=21.0, saturated_fats=8.0, salt=0.1, health_score=8.4,image="static/images/almonds.jpg"),
-                Product(name="Milk", category="Dairy", proteins=3.3, carbs=4.8, sugars=4.8, fats=1.0, saturated_fats=0.6, salt=0.1, health_score=8.8,image="static/images/almonds.jpg"),
-                Product(name="Sweet Potato", category="Vegetables", proteins=1.6, carbs=20.1, sugars=4.2, fats=0.1, saturated_fats=0.0, salt=0.03, health_score=9.1,image="static/images/almonds.jpg"),
-                Product(name="Cashews", category="Nuts", proteins=18.0, carbs=30.0, sugars=5.9, fats=44.0, saturated_fats=7.8, salt=0.02, health_score=8.2,image="static/images/almonds.jpg"),
+                Product(name="Brokuły", category="Warzywa", proteins=2.8, carbs=7.0, sugars=1.7, fats=0.4, saturated_fats=0.1, salt=0.02, health_score=9.8, image="static/images/1.webp"),
+    Product(name="Pierś z kurczaka", category="Mięso", proteins=31.0, carbs=0.0, sugars=0.0, fats=3.6, saturated_fats=1.0, salt=0.1, health_score=9.5, image="static/images/2.webp"),
+    Product(name="Migdały", category="Orzechy", proteins=21.0, carbs=22.0, sugars=4.4, fats=49.0, saturated_fats=3.8, salt=0.0, health_score=8.7, image="static/images/3.webp"),
+    Product(name="Bannan", category="Owoce", proteins=1.3, carbs=27.0, sugars=14.4, fats=0.3, saturated_fats=0.1, salt=0.01, health_score=8.0, image="static/images/4.webp"),
+    Product(name="Chleb pełnoziarnisty", category="Produkty zbożowe", proteins=12.0, carbs=48.0, sugars=5.0, fats=3.0, saturated_fats=0.5, salt=1.2, health_score=7.5, image="static/images/5.webp"),
+    Product(name="Pomidory", category="Warzywa", proteins=0.9, carbs=3.9, sugars=2.6, fats=0.2, saturated_fats=0.0, salt=0.02, health_score=9.0, image="static/images/6.webp"),
+    Product(name="Ogórek", category="Warzywa", proteins=0.6, carbs=3.6, sugars=1.7, fats=0.1, saturated_fats=0.0, salt=0.01, health_score=9.0, image="static/images/7.webp"),
+    Product(name="Soczewica", category="Rośliny strączkowe", proteins=25.8, carbs=60.1, sugars=2.0, fats=1.0, saturated_fats=0.2, salt=0.02, health_score=8.9, image="static/images/8.webp"),
+    Product(name="Orzeszki ziemne", category="Orzechy", proteins=25.8, carbs=16.1, sugars=4.2, fats=49.2, saturated_fats=6.8, salt=0.0, health_score=8.5, image="static/images/9.webp"),
+    Product(name="Pomarańcza", category="Owoce", proteins=0.9, carbs=12.0, sugars=9.2, fats=0.1, saturated_fats=0.0, salt=0.0, health_score=8.7, image="static/images/10.webp"),
+    Product(name="Maliny", category="Owoce", proteins=1.2, carbs=11.9, sugars=4.4, fats=0.7, saturated_fats=0.0, salt=0.01, health_score=9.2, image="static/images/11.webp"),
+    Product(name="Jogurt", category="Produkty mleczne", proteins=10.0, carbs=4.0, sugars=4.0, fats=5.0, saturated_fats=3.1, salt=0.1, health_score=8.3, image="static/images/12.webp"),
+    Product(name="Ser żółty", category="Produkty mleczne", proteins=25.0, carbs=1.3, sugars=0.5, fats=33.0, saturated_fats=21.0, salt=2.0, health_score=7.5, image="static/images/13.webp"),
+    Product(name="Stek wołowy", category="Mięso", proteins=29.0, carbs=0.0, sugars=0.0, fats=21.0, saturated_fats=8.0, salt=0.1, health_score=8.4, image="static/images/14.webp"),
+    Product(name="Mleko", category="Produkty mleczne", proteins=3.3, carbs=4.8, sugars=4.8, fats=1.0, saturated_fats=0.6, salt=0.1, health_score=8.8, image="static/images/15.webp"),
+    Product(name="Nerkowce", category="Orzechy", proteins=18.0, carbs=30.0, sugars=5.9, fats=44.0, saturated_fats=7.8, salt=0.02, health_score=8.2, image="static/images/16.webp"),
+    Product(name="Łosoś", category="Mięso, Ryby, Jajka", proteins=20.0, carbs=0.0, sugars=0.0, fats=13.0, saturated_fats=3.1, salt=0.1, health_score=9.2, image="static/images/17.webp"),
+    Product(name="Płatki owsiane", category="Produkty zbożowe", proteins=13.0, carbs=66.0, sugars=1.2, fats=7.0, saturated_fats=1.3, salt=0.01, health_score=9.5, image="static/images/18.webp"),
+    Product(name="Komosa ryżowa", category="Produkty zbożowe", proteins=14.0, carbs=64.0, sugars=1.6, fats=6.0, saturated_fats=0.7, salt=0.01, health_score=9.3, image="static/images/19.webp"),
+    Product(name="Ryż brązowy", category="Produkty zbożowe", proteins=7.5, carbs=77.0, sugars=0.7, fats=1.0, saturated_fats=0.2, salt=0.01, health_score=9.1, image="static/images/20.webp"),
+    Product(name="Kasza gryczana", category="Produkty zbożowe", proteins=13.0, carbs=72.0, sugars=0.5, fats=3.0, saturated_fats=0.7, salt=0.01, health_score=9.0, image="static/images/21.webp"),
+    Product(name="Jęczmień", category="Produkty zbożowe", proteins=12.0, carbs=73.0, sugars=0.8, fats=2.3, saturated_fats=0.5, salt=0.01, health_score=8.9, image="static/images/22.webp"),
+    Product(name="Orkisz", category="Produkty zbożowe", proteins=15.0, carbs=70.0, sugars=0.7, fats=2.5, saturated_fats=0.4, salt=0.01, health_score=8.7, image="static/images/23.webp"),
+    Product(name="Pierś z indyka", category="Mięso, Ryby, Jajka", proteins=29.0, carbs=0.0, sugars=0.0, fats=2.0, saturated_fats=0.5, salt=0.05, health_score=9.2, image="static/images/24.webp"),
+    Product(name="Polędwica wołowa", category="Mięso, Ryby, Jajka", proteins=26.0, carbs=0.0, sugars=0.0, fats=9.0, saturated_fats=3.5, salt=0.05, health_score=8.8, image="static/images/25.webp"),
+    Product(name="Makrela", category="Mięso, Ryby, Jajka", proteins=18.0, carbs=0.0, sugars=0.0, fats=13.8, saturated_fats=3.6, salt=0.2, health_score=9.0, image="static/images/26.webp"),
+    Product(name="Sardynki", category="Mięso, Ryby, Jajka", proteins=25.0, carbs=0.0, sugars=0.0, fats=11.0, saturated_fats=2.5, salt=0.6, health_score=8.9, image="static/images/27.webp"),
+    Product(name="Pstrąg", category="Mięso, Ryby, Jajka", proteins=19.0, carbs=0.0, sugars=0.0, fats=6.0, saturated_fats=1.5, salt=0.1, health_score=9.0, image="static/images/28.webp"),
+    Product(name="Jajka", category="Mięso, Ryby, Jajka", proteins=12.0, carbs=1.0, sugars=1.0, fats=10.0, saturated_fats=3.0, salt=0.3, health_score=9.1, image="static/images/29.webp"),
+    Product(name="Królik", category="Mięso, Ryby, Jajka", proteins=21.0, carbs=0.0, sugars=0.0, fats=4.5, saturated_fats=1.2, salt=0.1, health_score=9.2, image="static/images/30.webp"),
+    Product(name="Krewetki", category="Mięso, Ryby, Jajka", proteins=20.0, carbs=0.2, sugars=0.0, fats=1.5, saturated_fats=0.4, salt=0.3, health_score=8.9, image="static/images/31.webp"),
+    Product(name="Oliwa z oliwek", category="Tłuszcze", proteins=0.0, carbs=0.0, sugars=0.0, fats=100.0, saturated_fats=14.0, salt=0.0, health_score=9.7, image="static/images/32.webp"),
+    Product(name="Olej lniany", category="Tłuszcze", proteins=0.0, carbs=0.0, sugars=0.0, fats=100.0, saturated_fats=9.0, salt=0.0, health_score=9.5, image="static/images/33.webp"),
+    Product(name="Orzechy włoskie", category="Tłuszcze", proteins=15.0, carbs=14.0, sugars=2.6, fats=65.0, saturated_fats=6.1, salt=0.01, health_score=9.4, image="static/images/34.webp"),
+    Product(name="Pestki dyni", category="Tłuszcze", proteins=19.0, carbs=15.0, sugars=1.3, fats=49.0, saturated_fats=8.7, salt=0.02, health_score=9.2, image="static/images/35.webp"),
+    Product(name="Nasiona chia", category="Tłuszcze", proteins=17.0, carbs=42.0, sugars=0.0, fats=31.0, saturated_fats=3.3, salt=0.01, health_score=9.1, image="static/images/36.webp"),
+    Product(name="Masło orzechowe", category="Tłuszcze", proteins=25.0, carbs=20.0, sugars=9.0, fats=50.0, saturated_fats=10.0, salt=0.6, health_score=8.9, image="static/images/37.webp"),
+    Product(name="Orzechy laskowe", category="Tłuszcze", proteins=15.0, carbs=17.0, sugars=4.3, fats=61.0, saturated_fats=4.5, salt=0.01, health_score=9.2, image="static/images/38.webp"),
+    Product(name="Olej kokosowy", category="Tłuszcze", proteins=0.0, carbs=0.0, sugars=0.0, fats=100.0, saturated_fats=90.0, salt=0.0, health_score=8.5, image="static/images/39.webp"),
+    Product(name="Kasza jaglana", category="Produkty zbożowe", proteins=11.0, carbs=72.0, sugars=1.1, fats=4.0, saturated_fats=0.7, salt=0.01, health_score=8.8, image="static/images/40.webp"),
+    Product(name="Makaron pełnoziarnisty", category="Produkty zbożowe", proteins=13.0, carbs=63.0, sugars=2.5, fats=2.5, saturated_fats=0.4, salt=0.01, health_score=8.7, image="static/images/41.webp"),
+    Product(name="Chleb żytni", category="Produkty zbożowe", proteins=8.5, carbs=46.0, sugars=1.0, fats=1.8, saturated_fats=0.2, salt=0.5, health_score=8.6, image="static/images/42.webp"),
+    Product(name="Jarmuż", category="Warzywa", proteins=4.3, carbs=9.0, sugars=0.8, fats=0.9, saturated_fats=0.1, salt=0.02, health_score=9.8, image="static/images/43.webp"),
+    Product(name="Szpinak", category="Warzywa", proteins=3.5, carbs=3.6, sugars=0.4, fats=0.4, saturated_fats=0.1, salt=0.04, health_score=9.7, image="static/images/44.webp"),
+    Product(name="Słodkie ziemniaki", category="Warzywa", proteins=2.0, carbs=20.0, sugars=4.2, fats=0.1, saturated_fats=0.0, salt=0.01, health_score=9.5, image="static/images/45.webp"),
+    Product(name="Papryka czerwona", category="Warzywa", proteins=1.0, carbs=6.0, sugars=4.2, fats=0.3, saturated_fats=0.0, salt=0.01, health_score=9.4, image="static/images/46.webp"),
+    Product(name="Borówki", category="Owoce", proteins=0.7, carbs=14.0, sugars=9.7, fats=0.3, saturated_fats=0.0, salt=0.0, health_score=9.5, image="static/images/47.webp"),
+    Product(name="Jabłko", category="Owoce", proteins=0.3, carbs=14.0, sugars=10.4, fats=0.2, saturated_fats=0.0, salt=0.01, health_score=9.2, image="static/images/48.webp"),
+    Product(name="Awokado", category="Owoce", proteins=2.0, carbs=8.5, sugars=0.7, fats=15.0, saturated_fats=2.1, salt=0.01, health_score=9.6, image="static/images/49.webp"),
+    Product(name="Marchew", category="Warzywa", proteins=0.9, carbs=10.0, sugars=4.7, fats=0.2, saturated_fats=0.0, salt=0.03, health_score=9.3, image="static/images/50.webp"),
+    Product(name="Jogurt naturalny", category="Produkty mleczne", proteins=10.0, carbs=4.0, sugars=4.0, fats=3.5, saturated_fats=2.2, salt=0.1, health_score=8.9, image="static/images/51.webp"),
+    Product(name="Skyr", category="Produkty mleczne", proteins=11.0, carbs=4.0, sugars=4.0, fats=0.2, saturated_fats=0.1, salt=0.1, health_score=9.1, image="static/images/52.webp"),
+    Product(name="Kefir", category="Produkty mleczne", proteins=3.5, carbs=4.5, sugars=4.5, fats=2.0, saturated_fats=1.2, salt=0.1, health_score=8.8, image="static/images/53.webp"),
+    Product(name="Ricotta", category="Produkty mleczne", proteins=7.5, carbs=3.0, sugars=3.0, fats=13.0, saturated_fats=8.0, salt=0.4, health_score=8.6, image="static/images/54.webp"),
+    Product(name="Twaróg", category="Produkty mleczne", proteins=11.0, carbs=3.0, sugars=2.5, fats=4.0, saturated_fats=1.8, salt=0.5, health_score=8.7, image="static/images/55.webp"),
+    Product(name="Jogurt grecki", category="Produkty mleczne", proteins=9.0, carbs=4.0, sugars=4.0, fats=3.8, saturated_fats=2.4, salt=0.1, health_score=8.9, image="static/images/56.webp"),
+    Product(name="Ser kozi", category="Produkty mleczne", proteins=18.0, carbs=0.1, sugars=0.1, fats=21.0, saturated_fats=15.0, salt=1.2, health_score=8.5, image="static/images/57.webp"),
+    Product(name="Parmezan", category="Produkty mleczne", proteins=35.0, carbs=3.0, sugars=0.8, fats=25.0, saturated_fats=16.0, salt=1.5, health_score=8.4, image="static/images/58.webp"),
+    Product(name="Ser feta", category="Produkty mleczne", proteins=14.0, carbs=4.0, sugars=4.0, fats=21.0, saturated_fats=14.0, salt=2.2, health_score=8.3, image="static/images/59.webp"),
+    Product(name="Mleko odtłuszczone", category="Produkty mleczne", proteins=3.3, carbs=4.8, sugars=4.8, fats=1.0, saturated_fats=0.7, salt=0.1, health_score=8.9, image="static/images/60.webp"),
+    Product(name="Maślanka", category="Produkty mleczne", proteins=3.4, carbs=4.8, sugars=4.8, fats=1.0, saturated_fats=0.7, salt=0.1, health_score=8.8, image="static/images/61.webp")]
                 
-            ]
-            for i in range(76):
-                products.append(Product(name=f"Product {i+25}", category="General", proteins=10.0, carbs=20.0, sugars=5.0, fats=10.0, saturated_fats=2.0, salt=0.5, health_score=8.0))
+            
         if not Diet.query.first():
             diets = [
                 Diet(
@@ -2012,3 +2056,5 @@ Diet(
             db.session.add_all(products)
             db.session.commit()
 app.run(debug=True)
+
+

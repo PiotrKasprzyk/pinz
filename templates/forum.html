@@ -5,56 +5,33 @@
 {% block content %}
 <h1>Forum</h1>
 
-<!-- Formularz filtrowania -->
+
 <form method="GET" action="/forum" class="forum-filter-form">
-<<<<<<< HEAD
     <label for="author" class="forum-filter-label">Autor:</label>
-=======
-    <label for="author" class="forum-filter-label">Author:</label>
->>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
     <input type="text" name="author" id="author" value="{{ request.args.get('author', '') }}" class="forum-filter-input">
 
     <label for="tag" class="forum-filter-label">Tag:</label>
     <input type="text" name="tag" id="tag" value="{{ request.args.get('tag', '') }}" class="forum-filter-input">
 
-<<<<<<< HEAD
     <label for="sort_by" class="forum-filter-label">Sortuj:</label>
     <select name="sort_by" id="sort_by" class="forum-filter-select">
         <option value="created_at" {% if request.args.get('sort_by') == 'created_at' %}selected{% endif %}>Najnowsze</option>
         <option value="likes" {% if request.args.get('sort_by') == 'likes' %}selected{% endif %}>Najbardziej lubiane</option>
     </select>
 
-    <button type="submit" class="forum-filter-button">Filtr</button>
-=======
-    <label for="sort_by" class="forum-filter-label">Sort By:</label>
-    <select name="sort_by" id="sort_by" class="forum-filter-select">
-        <option value="created_at" {% if request.args.get('sort_by') == 'created_at' %}selected{% endif %}>Newest</option>
-        <option value="likes" {% if request.args.get('sort_by') == 'likes' %}selected{% endif %}>Most Liked</option>
-    </select>
-
-    <button type="submit" class="forum-filter-button">Filter</button>
->>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
-    <a href="/forum" class="forum-reset-button">Reset</a>
+    <button type="submit" class="btn glass">Filtruj</button>
+    <a href="/forum" class="btn glass">Resetuj</a>
 </form>
 
-<!-- Formularz tworzenia nowego posta -->
+
 {% if current_user.is_authenticated %}
 <form method="POST" enctype="multipart/form-data" class="forum-new-post-form">
-<<<<<<< HEAD
     <input type="text" name="title" placeholder="Tytuł posta" required class="forum-post-input">
     <textarea name="content" placeholder="Treść posta..." rows="4" required class="forum-post-textarea"></textarea>
     <input type="text" name="tags" placeholder="Tagi" class="forum-post-input">
-    <label for="image" class="forum-post-label">Prześlij obraz:</label>
+    <label for="image" class="btn glass">Prześlij obraz:</label>
     <input type="file" name="image" id="image" accept="image/*" class="file-input file-input-bordered w-full max-w-xs" />
-    <button type="submit" class="forum-post-button">Stwórz post</button>
-=======
-    <input type="text" name="title" placeholder="Post title" required class="forum-post-input">
-    <textarea name="content" placeholder="Write your post..." rows="4" required class="forum-post-textarea"></textarea>
-    <input type="text" name="tags" placeholder="Tags (comma-separated)" class="forum-post-input">
-    <label for="image" class="forum-post-label">Upload an image:</label>
-    <input type="file" name="image" id="image" accept="image/*" class="file-input file-input-bordered w-full max-w-xs" />
-    <button type="submit" class="forum-post-button">Create Post</button>
->>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
+    <button type="submit" class="btn glass">Stwórz post</button>
 </form>
 {% else %}
 <p>You need to <a href="/login">Zaloguj się</a> aby stówrzyć post</p>
@@ -62,7 +39,7 @@
 
 <hr>
 
-<!-- Wyświetlanie postów -->
+
 <div class="forum-posts">
     {% for post in posts.items %}
     <div class="forum-post-card">
@@ -71,7 +48,7 @@
         <img src="{{ url_for('static', filename=post.image) }}" alt="Post Image" class="forum-post-image">
         {% endif %}
         <p class="forum-post-content">{{ post.content }}</p>
-        <p class="forum-post-meta"><small>Posted by {{ post.author }} on {{ post.created_at }}</small></p>
+        <p class="forum-post-meta"><small>Opublikowana przez {{ post.author }}  {{ post.created_at }}</small></p>
         <p class="forum-post-tags">
             Tags: 
             {% for tag in post.tags.split(',') %}
@@ -79,7 +56,7 @@
             {% endfor %}
         </p>
 
-        <!-- Polubienia -->
+        
         <div class="like-section">
             <button class="like-button" data-post-id="{{ post.id }}">
                 <img src="{{ url_for('static', filename='icons/like.png') }}" alt="Like" width="20">
@@ -87,49 +64,30 @@
             <button class="unlike-button" data-post-id="{{ post.id }}">
                 <img src="{{ url_for('static', filename='icons/unlike.png') }}" alt="Unlike" width="20">
             </button>
-<<<<<<< HEAD
             <span id="post-likes-count-{{ post.id }}">Polubienia: {{ post.likes_count }}</span>
             <span id="post-unlikes-count-{{ post.id }}">To mi się nie podoba: {{ post.unlikes_count }}</span>
-=======
-            <span id="post-likes-count-{{ post.id }}">Likes: {{ post.likes_count }}</span>
-            <span id="post-unlikes-count-{{ post.id }}">Unlikes: {{ post.unlikes_count }}</span>
->>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
         </div>
 
-         <!-- Edycja i usuwanie tylko dla autora -->
+         
          {% if post.user_id == current_user.id %}
          <div class="forum-post-actions">
-<<<<<<< HEAD
-             <a href="{{ url_for('edit_post', post_id=post.id) }}" class="forum-btn-edit">Edytuj</a>
+             <a href="{{ url_for('edit_post', post_id=post.id) }}" class="btn glass">Edytuj</a>
              <form method="POST" action="{{ url_for('delete_post', post_id=post.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this post?');">
-                 <button type="submit" class="forum-btn-delete">Usuń</button>
-=======
-             <a href="{{ url_for('edit_post', post_id=post.id) }}" class="forum-btn-edit">Edit</a>
-             <form method="POST" action="{{ url_for('delete_post', post_id=post.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this post?');">
-                 <button type="submit" class="forum-btn-delete">Delete</button>
->>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
+                 <button type="submit" class="btn glass">Usuń</button>
              </form>
          </div>
          {% endif %}
 
 
-        <!-- Komentarze -->
+        
         <div class="comments-section">
-<<<<<<< HEAD
             <h3>Komentarze:</h3>
             <form method="POST" action="/comment/{{ post.id }}" enctype="multipart/form-data">
                 <textarea name="content" placeholder="Write a comment..." required></textarea>
                 <input type="file" name="image" accept="image/*">
-                <button type="submit" class="btn-comment">Komentarz</button>
-=======
-            <h3>Comments:</h3>
-            <form method="POST" action="/comment/{{ post.id }}" enctype="multipart/form-data">
-                <textarea name="content" placeholder="Write a comment..." required></textarea>
-                <input type="file" name="image" accept="image/*">
-                <button type="submit" class="btn-comment">Comment</button>
->>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
+                <button type="submit" class="btn glass">Komentarz</button>
             </form>
-            <button class="toggle-comments-btn" data-post-id="{{ post.id }}">▼ Comments</button>
+            <button class="toggle-comments-btn" data-post-id="{{ post.id }}">▼ Komentarz</button>
             <ul class="comments-list" id="comments-list-{{ post.id }}" style="display: none;">
                 {% for comment in post.comments.filter_by(parent_id=None).all() %}
                 <li>
@@ -138,7 +96,7 @@
                     <img src="{{ url_for('static', filename=comment.image) }}" alt="Comment Image" class="comment-image">
                     {% endif %}
                     <p><small>Posted by User {{ comment.user_id }} on {{ comment.created_at }}</small></p>
-                    <button class="toggle-replies-btn" data-comment-id="{{ comment.id }}">▼ Replies</button>
+                    <button class="toggle-replies-btn" data-comment-id="{{ comment.id }}">▼ Odpowiedzi</button>
                     <ul class="replies" id="replies-{{ comment.id }}" style="display: none;">
                         {% for reply in comment.replies.all() %}
                         <li>
@@ -146,18 +104,14 @@
                             {% if reply.image %}
                             <img src="{{ url_for('static', filename=reply.image) }}" alt="Reply Image" class="reply-image">
                             {% endif %}
-                            <p><small>Posted by User {{ reply.user_id }} on {{ reply.created_at }}</small></p>
+                            <p><small>Obublikowania przez {{ reply.user_id }}  {{ reply.created_at }}</small></p>
                         </li>
                         {% endfor %}
                     </ul>
                     <form method="POST" action="/comment/reply/{{ comment.id }}" enctype="multipart/form-data">
                         <textarea name="content" placeholder="Write a reply..." required></textarea>
                         <input type="file" name="image" accept="image/*">
-<<<<<<< HEAD
-                        <button type="submit" class="btn-reply">odpowiedz</button>
-=======
-                        <button type="submit" class="btn-reply">Reply</button>
->>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
+                        <button type="submit" class="btn glass">odpowiedz</button>
                     </form>
                 </li>
                 {% endfor %}
@@ -168,14 +122,14 @@
 </div>
 
 
-<!-- Paginacja -->
+
 <div class="pagination">
     {% if posts.has_prev %}
-    <a href="{{ url_for('forum', page=posts.prev_num) }}">&laquo; Previous</a>
+    <a href="{{ url_for('forum', page=posts.prev_num) }}">&laquo; Poprzednia</a>
     {% endif %}
-    <span>Page {{ posts.page }} of {{ posts.pages }}</span>
+    <span>Strona {{ posts.page }} z {{ posts.pages }}</span>
     {% if posts.has_next %}
-    <a href="{{ url_for('forum', page=posts.next_num) }}">Next &raquo;</a>
+    <a href="{{ url_for('forum', page=posts.next_num) }}">Następna &raquo;</a>
     {% endif %}
 </div>
 
@@ -212,7 +166,7 @@
         });
     });
     document.addEventListener('DOMContentLoaded', () => {
-        // Obsługa Like dla postów
+        
         const postLikeButtons = document.querySelectorAll('.like-button[data-post-id]');
         postLikeButtons.forEach(button => {
             button.addEventListener('click', (event) => {
@@ -231,7 +185,7 @@
             });
         });
 
-        // Obsługa Unlike dla postów
+        
         const postUnlikeButtons = document.querySelectorAll('.unlike-button[data-post-id]');
         postUnlikeButtons.forEach(button => {
             button.addEventListener('click', (event) => {
@@ -250,7 +204,7 @@
             });
         });
 
-        // Obsługa Like dla komentarzy
+        
         const commentLikeButtons = document.querySelectorAll('.like-button[data-comment-id]');
         commentLikeButtons.forEach(button => {
             button.addEventListener('click', (event) => {
@@ -269,7 +223,7 @@
             });
         });
 
-        // Obsługa Unlike dla komentarzy
+        
         const commentUnlikeButtons = document.querySelectorAll('.unlike-button[data-comment-id]');
         commentUnlikeButtons.forEach(button => {
             button.addEventListener('click', (event) => {

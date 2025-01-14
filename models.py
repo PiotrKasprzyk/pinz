@@ -188,16 +188,16 @@ class TrainingPlan(db.Model):
     notes = db.Column(db.Text, nullable=True)              
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     
-    #user = db.relationship('User', backref='training_plans')
+    
 class Achievement(db.Model):
     __tablename__ = 'achievement'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=True)
-    category = db.Column(db.String(50), nullable=False)  # np. 'Diet', 'Training', 'Profile'
+    category = db.Column(db.String(50), nullable=False)  
     achieved_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-    icon = db.Column(db.String(300), nullable=True)  # Ścieżka do ikony odznaki
+    icon = db.Column(db.String(300), nullable=True)  
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     
     user = db.relationship('User', backref='achievements')

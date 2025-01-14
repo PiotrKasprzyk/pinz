@@ -3,17 +3,14 @@
 {% block title %}My Diets{% endblock %}
 
 {% block content %}
-<!-- Przycisk dodania nowej diety -->
-<button class="btn btn-primary"><a href="{{ url_for('add_diet') }}" class="btn-add-diet">Add Diet</a></button>
-<button class="btn btn-primary"><a href="{{ url_for('profile') }}" >Powrót</a></button>
+<button class="btn glass"><a href="{{ url_for('add_diet') }}" >Dodaj diete</a></button>
+<button class="btn glass"><a href="{{ url_for('profile') }}">Powrót do profilu</a></button>
 
-<!-- Kafelki z dietami -->
 <div class="exercise-cards">
     {% for diet in diets %}
     <div class="card glass w-96">
         <div class="card-body">
             
-<<<<<<< HEAD
             {% set days_translation = {
                 "Monday": "Poniedziałek",
                 "Tuesday": "Wtorek",
@@ -26,10 +23,6 @@
             
             <h3>{{ days_translation[diet.day_of_week] }}</h3>
         <p><strong>Śniadanie:</strong> {{ diet.breakfast }}</p>
-=======
-        <h3>{{ diet.day_of_week }}</h3>
-        <p><strong>Breakfast:</strong> {{ diet.breakfast }}</p>
->>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
         <details>
             <summary>Przepis</summary>
             <p>{{ diet.breakfast_recipe[0].details if diet.breakfast_recipe }}</p>
@@ -59,7 +52,6 @@
             <p>{{ diet.snack_recipe[0].details if diet.snack_recipe }}</p>
         </details>
 
-        <!-- Przycisk edycji i usuwania -->
         <div class="diet-actions">
             <a href="{{ url_for('edit_diet', diet_id=diet.id) }}" class="btn-edit">Edytuj</a>
             <form method="POST" action="{{ url_for('delete_diet', diet_id=diet.id) }}" class="delete-form">

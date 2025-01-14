@@ -1,0 +1,257 @@
+import time  # Dodano import do obsługi opóźnień
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import requests
+
+BASE_URL = "http://127.0.0.1:5000"  # Adres aplikacji Flask
+
+def save_test_result(test_name, result, error=None):
+    """Zapisuje wynik testu do pliku tekstowego."""
+    with open("test_results.txt", "a", encoding="utf-8") as f:
+        f.write(f"Test: {test_name}\n")
+        f.write(f"Wynik: {'Sukces' if result else 'Niepowodzenie'}\n")
+        if error:
+            f.write(f"Błąd: {error}\n")
+        f.write("-" * 40 + "\n")
+
+def test_navigation():
+    """Test nawigacji po stronach aplikacji."""
+    driver = webdriver.Chrome()
+    try:
+        print("Rozpoczynanie testu nawigacji...")
+        driver.get(f"{BASE_URL}/")
+        navigate_to_page(driver, "Produkty spożywcze")
+        navigate_to_page(driver, "Dieta")
+        navigate_to_page(driver, "Ćwiczenia Fizyczne")
+        navigate_to_page(driver, "Plan Treningowy")
+        save_test_result("test_navigation", True)
+    except Exception as e:
+        print(f"Błąd podczas testu nawigacji: {e}")
+        save_test_result("test_navigation", False, str(e))
+    finally:
+        driver.quit()
+def navigate_to_page(driver, page_name):
+    """Funkcja do nawigacji na podstronę na podstawie jej nazwy."""
+    print(f"Przechodzenie na stronę: {page_name}...")
+    link = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.LINK_TEXT, page_name))
+    )
+    link.click()
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, f"//h1[contains(text(), '{page_name}')]"))
+    )
+    print(f"Strona {page_name} załadowana pomyślnie!")
+def login_if_required(driver):
+    """Logowanie użytkownika, jeśli nie jest zalogowany."""
+    try:
+        print("Sprawdzanie, czy użytkownik jest zalogowany...")
+        WebDriverWait(driver, 5).until(
+            EC.presence_of_element_located((By.LINK_TEXT, "Logout"))
+        )
+        print("Użytkownik jest już zalogowany.")
+    except Exception:
+        print("Użytkownik nie jest zalogowany. Logowanie...")
+        driver.get(f"{BASE_URL}/login")
+        driver.find_element(By.NAME, "email").send_keys("kuba.krak32@gmail.com")
+        driver.find_element(By.NAME, "password").send_keys("admin12")
+        driver.find_element(By.NAME, "password").send_keys(Keys.RETURN)
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.LINK_TEXT, "Logout"))
+        )
+        print("Logowanie zakończone sukcesem.")
+
+def test_registration_and_login():
+    """Test rejestracji i logowania w jednym ciągu."""
+    driver = webdriver.Chrome()
+    try:
+        print("Rozpoczynanie rejestracji...")
+        driver.get(f"{BASE_URL}/register")
+        driver.find_element(By.NAME, "username").send_keys("admin")
+        driver.find_element(By.NAME, "email").send_keys("kuba.krak32@gmail.com")
+        driver.find_element(By.NAME, "password").send_keys("admin12")
+        driver.find_element(By.NAME, "confirm_password").send_keys("admin12")
+        driver.find_element(By.NAME, "terms").click()
+        driver.find_element(By.NAME, "confirm_password").send_keys(Keys.RETURN)
+
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//h1[text()='Login']"))
+        )
+        print("Rejestracja zakończona sukcesem!")
+        save_test_result("test_registration_and_login", True)
+
+        print("Rozpoczynanie logowania...")
+        driver.find_element(By.NAME, "email").send_keys("kuba.krak32@gmail.com")
+        driver.find_element(By.NAME, "password").send_keys("admin12")
+        driver.find_element(By.NAME, "password").send_keys(Keys.RETURN)
+
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//h1[text()='Welcome to Home']"))
+        )
+        print("Logowanie zakończone sukcesem!")
+    except Exception as e:
+        print(f"Błąd podczas testu rejestracji i logowania: {e}")
+        save_test_result("test_registration_and_login", False, str(e))
+    finally:
+        driver.quit()
+
+def test_forum_access():
+    """Test dostępu do Forum z wymuszeniem logowania."""
+    driver = webdriver.Chrome()
+    try:
+        print("Rozpoczynanie testu dostępu do Forum...")
+        driver.get(f"{BASE_URL}/forum")
+        login_if_required(driver)
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//h1[contains(text(), 'Forum')]"))
+        )
+        print("Dostęp do Forum uzyskany pomyślnie!")
+        save_test_result("test_forum_access", True)
+    except Exception as e:
+        print(f"Błąd podczas testu dostępu do Forum: {e}")
+        save_test_result("test_forum_access", False, str(e))
+    finally:
+        driver.quit()
+
+def test_add_opinion():
+    """Test dodawania opinii z wymuszeniem logowania."""
+    driver = webdriver.Chrome()
+    try:
+        print("Rozpoczynanie testu dodawania opinii...")
+        driver.get(f"{BASE_URL}/opinions")
+        login_if_required(driver)
+        opinion_field = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "opinion"))
+        )
+        opinion_field.send_keys("To jest testowa opinia.")
+        driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
+        success_message = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "success"))
+        )
+        assert "Opinia została dodana" in success_message.text
+        print("Dodawanie opinii zakończone sukcesem!")
+        save_test_result("test_add_opinion", True)
+    except Exception as e:
+        print(f"Błąd podczas testu dodawania opinii: {e}")
+        save_test_result("test_add_opinion", False, str(e))
+    finally:
+        driver.quit()
+
+def test_bmi_calculator():
+    """Test kalkulatora BMI."""
+    driver = webdriver.Chrome()
+    try:
+        print("Rozpoczynanie testu kalkulatora BMI...")
+        driver.get(f"{BASE_URL}/bmi")
+        driver.find_element(By.NAME, "height").send_keys("180")
+        driver.find_element(By.NAME, "weight").send_keys("75")
+        driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
+        result = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "bmi-result"))
+        )
+        assert "Twoje BMI to" in result.text
+        print("Kalkulator BMI działa poprawnie!")
+        save_test_result("test_bmi_calculator", True)
+    except Exception as e:
+        print(f"Błąd podczas testu kalkulatora BMI: {e}")
+        save_test_result("test_bmi_calculator", False, str(e))
+    finally:
+        driver.quit()
+
+def test_responsiveness():
+    """Test responsywności strony."""
+    driver = webdriver.Chrome()
+    try:
+        resolutions = [(1920, 1080), (1366, 768), (768, 1024), (375, 667)]
+        for width, height in resolutions:
+            driver.set_window_size(width, height)
+            print(f"Testowanie responsywności dla rozdzielczości {width}x{height}...")
+            driver.get(f"{BASE_URL}/")
+            time.sleep(2)
+            assert driver.title != "", "Strona główna nie załadowała się poprawnie."
+            print(f"Responsywność dla {width}x{height} działa poprawnie.")
+        save_test_result("test_responsiveness", True)
+    except Exception as e:
+        print(f"Błąd podczas testu responsywności: {e}")
+        save_test_result("test_responsiveness", False, str(e))
+    finally:
+        driver.quit()
+def test_api():
+    """Test sprawdzający API."""
+    try:
+        print("Rozpoczynanie testu API...")
+        response = requests.get(f"{BASE_URL}/api/events")
+        assert response.status_code == 200, f"Błąd: kod odpowiedzi {response.status_code}"
+        data = response.json()
+        assert len(data) > 0, "Brak danych w API"
+        print(f"API zwróciło {len(data)} rekordów.")
+        save_test_result("test_api", True)
+    except Exception as e:
+        print(f"Błąd podczas testu API: {e}")
+        save_test_result("test_api", False, str(e))
+def test_page_scrolling():
+    """Test przewijania strony."""
+    driver = webdriver.Chrome()
+
+    try:
+        print("Rozpoczynanie testu przewijania strony...")
+        driver.get(f"{BASE_URL}/")
+        time.sleep(2)
+
+        # Przewinięcie w dół strony
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)
+
+        # Przewinięcie na górę strony
+        driver.execute_script("window.scrollTo(0, 0);")
+        time.sleep(2)
+
+        print("Przewijanie strony działa poprawnie!")
+        save_test_result("test_page_scrolling", True)
+
+    except Exception as e:
+        print(f"Błąd podczas testu przewijania strony: {e}")
+        save_test_result("test_page_scrolling", False, str(e))
+    finally:
+        driver.quit()
+def test_logout():
+    """Test wylogowania użytkownika."""
+    driver = webdriver.Chrome()
+    try:
+        print("Rozpoczynanie testu wylogowania...")
+        driver.get(f"{BASE_URL}/login")
+        driver.find_element(By.NAME, "email").send_keys("kuba.krak32@gmail.com")
+        driver.find_element(By.NAME, "password").send_keys("admin12")
+        driver.find_element(By.NAME, "password").send_keys(Keys.RETURN)
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.LINK_TEXT, "Logout"))
+        )
+        driver.find_element(By.LINK_TEXT, "Logout").click()
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//button[text()='Login']"))
+        )
+        print("Wylogowanie zakończone sukcesem!")
+        save_test_result("test_logout", True)
+    except Exception as e:
+        print(f"Błąd podczas testu wylogowania: {e}")
+        save_test_result("test_logout", False, str(e))
+    finally:
+        driver.quit()
+if __name__ == "__main__":
+    with open("test_results.txt", "w", encoding="utf-8") as f:
+        f.write("Wyniki testów aplikacji\n")
+        f.write("=" * 40 + "\n")
+
+    
+
+    test_registration_and_login()  # Test rejestracji i logowania
+    test_navigation()              # Test nawigacji po stronach
+    test_forum_access()            # Test dostępu do Forum
+    test_add_opinion()            # Test dodawania opinii
+    test_bmi_calculator()          # Test kalkulatora BMI
+    test_responsiveness()          # Test responsywności strony
+    test_logout()                  # Test wylogowania
+    test_page_scrolling()          # Test przewijania strony   # Test slidera
+    test_api() 

@@ -6,14 +6,12 @@
 <h1>Personal Details</h1>
 
 <div style="position: relative;">
-    <!-- Zdjęcie profilowe -->
     {% if user.profile_image %}
     <img src="{{ url_for('static', filename=user.profile_image) }}" alt="Profile Image" class="profile-image">
     {% else %}
     <img src="{{ url_for('static', filename='default_profile.png') }}" alt="Default Profile Image" class="profile-image">
     {% endif %}
 
-    <!-- Formularz danych -->
     <form method="POST" enctype="multipart/form-data">
         <label for="first_name">Imię:</label>
         <input type="text" name="first_name" id="first_name" value="{{ user.first_name or '' }}" required>
@@ -30,7 +28,7 @@
         <label for="profile_image">Zdjęcie profilowe:</label>
         <input type="file" name="profile_image" id="profile_image">
 
-        <button type="submit" class="btn-save">Zapisz zmiany</button>
+        <button type="submit" class="btn glass">Zapisz zmiany</button>
     </form>
 </div>
 {% endblock %}

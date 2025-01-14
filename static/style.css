@@ -25,6 +25,14 @@ header nav a {
     margin-bottom: 5px;
     border: 2px solid #b400fc;
 }
+.logo1{
+    width: 55px;
+    height: 55px;
+    
+    object-fit: cover;
+    margin-bottom: 5px;
+    ;
+}
 main {
     padding: 20px;
 }
@@ -834,7 +842,7 @@ form button:hover {
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 10px;
-    background-color: #f8f9fa;
+    background-color:   rgba(45, 2, 85, 0.87);
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

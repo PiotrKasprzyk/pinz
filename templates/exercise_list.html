@@ -5,7 +5,7 @@
 {% block content %}
 <h1>{{ category.title() }} Exercises</h1>
 
-<!-- Formularz filtrowania -->
+
 <form method="GET" action="/exercises/{{ category }}">
     <label for="body_part">Część ciała:</label>
     <select name="body_part" id="body_part">
@@ -23,13 +23,13 @@
         {% endfor %}
     </select>
 
-    <button type="submit">Filter</button>
-    <a href="/exercises/{{ category }}" class="reset-button">Reset</a>
+    <button type="submit" class="btn glass">Filter</button>
+    <a href="/exercises/{{ category }}" class="btn glass">Reset</a>
 </form>
 
 <hr>
 
-<!-- Kafelki ćwiczeń -->
+
 <div class="exercise-cards">
     {% for exercise in exercises %}
     <div class="card bg-base-100 image-full w-96 shadow-xl">
@@ -51,5 +51,5 @@
 </div>
 
 
-<a href="/exercises" class="back-button">Powrót</a>
+<a href="/exercises" class="btn glass">Powrót</a>
 {% endblock %}

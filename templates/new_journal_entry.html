@@ -8,7 +8,6 @@
     <label for="date">Data:</label>
     <input type="date" id="date" name="date" required>
 
-<<<<<<< HEAD
     <label for="day_of_week">Dzień tygodnia:</label>
     <select name="day_of_week" id="day_of_week" required>
         <option value="Monday">Poniedziałek</option>
@@ -18,17 +17,6 @@
         <option value="Friday">Piątek</option>
         <option value="Saturday">Sobota</option>
         <option value="Sunday">Niedziela</option>
-=======
-    <label for="day_of_week">Day of Week:</label>
-    <select name="day_of_week" id="day_of_week" required>
-        <option value="Monday">Monday</option>
-        <option value="Tuesday">Tuesday</option>
-        <option value="Wednesday">Wednesday</option>
-        <option value="Thursday">Thursday</option>
-        <option value="Friday">Friday</option>
-        <option value="Saturday">Saturday</option>
-        <option value="Sunday">Sunday</option>
->>>>>>> c6bcbaad7c6e80ff3f12d2f29207bcc88ff335cd
     </select>
 
     <label for="breakfast">Śniadanie:</label>
@@ -60,12 +48,12 @@
         </div>
     </div>
 
-    <button type="button" id="add-exercise" class="btn-add">Dodaj ćwiczenie</button>
+    <button type="button" id="add-exercise" class="btn glass">Dodaj ćwiczenie</button>
 
     <label for="conclusions">Wnioski:</label>
     <textarea id="conclusions" name="conclusions"></textarea>
 
-    <button type="submit" class="btn-submit">Zatwierdzi</button>
+    <button type="submit" class="btn glass">Zatwierdzi</button>
 </form>
 <style>
     /* General form styling */
@@ -74,11 +62,11 @@ form {
     flex-direction: column;
     max-width: 400px;
     margin: 0 auto;
-    background-color: rgb(141, 4, 253);
+    background-color: rgba(45, 2, 85, 0.87);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-color:black;
+    text-color:white;
 }
 
 /* Label styling */
@@ -113,8 +101,8 @@ form .profile-image {
     margin-top: 10px;
     max-width: 100px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgb(132, 0, 255);
-}
+    box-shadow: 0 2px 4px  rgba(45, 2, 85, 0.87);
+} 
 
 /* Submit button styling */
 form .btn-save {

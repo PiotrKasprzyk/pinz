@@ -5,7 +5,6 @@
 {% block content %}
 
 
-<!-- Formularz filtrowania -->
 <form method="GET" action="/plan" class="filter-form">
     <div class="filter-row">
         <label for="location">Lokacja:</label>
@@ -25,14 +24,13 @@
         </select>
     </div>
     <div class="filter-row">
-        <button type="submit">Filter</button>
-        <a href="/plan" class="reset-button">Reset</a>
+        <button type="submit" class="btn glass">Filter</button>
+        <a href="/plan" class="btn glass">Reset</a>
     </div>
 </form>
 
 <hr>
 
-<!-- Kafelki planów -->
 <div class="exercise-cards">
     {% for plan in training_plans %}
     <div class="card glass w-96" >
@@ -43,7 +41,6 @@
         <p><strong>Health Limitations:</strong> {{ plan.health_limitations }}</p>
         <button onclick="toggleDetails({{ plan.id }})" btn btn-primary>Details</button>
 
-        <!-- Szczegóły planu (ukryte domyślnie) -->
         <div class="plan-details" id="details-{{ plan.id }}" style="display: none;">
             <h3 style="font-weight: bold; font-size:1.5em">Plan Details</h3>
             {% for detail in plan.details %}
